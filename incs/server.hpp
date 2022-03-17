@@ -4,8 +4,11 @@
 #include <iostream>
 #include <map>
 #include <sys/socket.h>
+#include <netinet/in.h>
 
 #include "error.hpp"
+
+#define MAX_CONNECTIONS 1024
 
 class Server
 {
@@ -29,19 +32,28 @@ private:
 bool Server::init(void)
 {
 	// Creating socket
-	this->_server_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (this->_server_fd == -1)
+	if ((this->_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
-		printError("Server could not be created: socket() function error");
+		printError("Server could not be initialized: ", "socket() call failed");
 		return (false);
 	}
-	else
+	// Assigning a transport address to the socket
+	// 1. Initializing struct
+	memset((char *)&(this->_address), 0, sizeof(this->_address));
+	this->_address.sin_family = AF_INET;
+	this->_address.sin_addr.s_addr = htonl(INADDR_ANY); // ???How to assign port
+	this->_address.sin_port = htons(PORT);				// ???How to assign port
+	// 2. Bind call
+	if (bind(this->_server_fd, &(this->_address), sizeof(this->_address)) == -1)
 	{
-		// Assigning a transport address to the socket
-		memset((char *)&(this->_address), 0, sizeof(this->_address));
-		this->_address.sin_family = AF_INET;
-		this->_address.sin_addr.s_addr = htonl(INADDR_ANY); // How to assign port
-		this->_address.sin_port = htons(PORT);				// How to assign port
+		printError("Server could not be initialized: ", "bind() call failed");
+		return (false);
+	}
+	// 3. Listen call
+	if (listen(this->_server_fd, MAX_CONNECTIONS) == -1)
+	{
+		printError("Server could not be initialized: ", "bind() call failed");
+		return (false);
 	}
 	return (true);
 }

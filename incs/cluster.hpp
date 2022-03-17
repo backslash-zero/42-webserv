@@ -1,5 +1,7 @@
 #pragma once
 
+#include "server.hpp"
+
 class Cluster
 {
 public:
