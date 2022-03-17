@@ -9,7 +9,8 @@ public:
 	Cluster(void);
 	~Cluster(void);
 
-	void getConfig(char *conf_file);
+	void parseConf(char *conf_file);
+	bool initCluster(void);
 
 private:
 	// Members:
@@ -19,5 +20,21 @@ private:
 
 	// Exceptions:
 	// 1 - File not found
+	class fileNotFoundException : public std::exception
+	{
+	public:
+		virtual const char *what() const throw()
+		{
+			return ("File not foud");
+		}
+	}
 	// 2 - Problem with configuration
+	class invalidArgumentException : public std::exception
+	{
+	public:
+		virtual const char *what() const throw()
+		{
+			return ("Invalid configuration file");
+		}
+	};
 };

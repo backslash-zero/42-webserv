@@ -3,15 +3,23 @@
 int launch_cluster(char *conf_file)
 {
 	Cluster cluster;
+
+	// Parsing .conf
 	try
 	{
-		cluster.getConfig(conf_file); // .conf parsing
+		cluster.parseConf(conf_file);
 	}
 	catch (const std::exception &e)
 	{
 		printError(e.what());
 		return (1);
 	}
+
+	// Initializing cluster
+
+	if (!cluster.initCluster()) // .conf parsing
+		return (1);
+
 	return (0);
 }
 
