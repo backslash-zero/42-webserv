@@ -44,7 +44,7 @@ bool Server::init(void)
 	this->_address.sin_addr.s_addr = htonl(INADDR_ANY); // ???How to assign port
 	this->_address.sin_port = htons(PORT);				// ???How to assign port
 	// 2. Bind call
-	if (bind(this->_server_fd, &(this->_address), sizeof(this->_address)) == -1)
+	if (bind(this->_server_fd, (struct sockaddr *)&(this->_address), sizeof(this->_address)) == -1)
 	{
 		printError("Server could not be initialized: ", "bind() call failed");
 		return (false);
