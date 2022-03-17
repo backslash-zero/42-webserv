@@ -6,7 +6,6 @@ int launch_cluster(char *conf_file)
 	try
 	{
 		cluster.getConfig(conf_file); // .conf parsing
-									  /* code */
 	}
 	catch (const std::exception &e)
 	{
