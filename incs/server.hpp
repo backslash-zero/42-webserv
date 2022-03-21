@@ -14,10 +14,10 @@ class Server
 {
 public:
 	// Constructors
-	Server();
+	Server(void);
 
 	// Destructor
-	Server();
+	~Server(void);
 
 	// Tools
 	bool init(void);

@@ -9,13 +9,15 @@ public:
 	Cluster(void);
 	~Cluster(void);
 
-	void parseConf(char *conf_file);
+	void parseConf(char *conf_file); // parsing .conf and creating configuration
 	bool initCluster(void);
+
+	// Config stored as a class?
 
 private:
 	// Members:
 	std::map<int, Server> _servers; // stores all servers created
-
+	size_t _server_count;
 	// Parsing .conf private functions:
 
 	// Exceptions:
