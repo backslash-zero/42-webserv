@@ -3,18 +3,17 @@
 int launch_cluster(char *conf_file)
 {
 	Cluster cluster;
-
+	std::vector<Config> configs;
 	// Parsing .conf
 	try
 	{
-		cluster.parseConf(conf_file);
+		// Parsing with conf_parser.h: returns vector<Config>
 	}
 	catch (const std::exception &e)
 	{
 		printError(e.what());
 		return (1);
 	}
-
 	// Initializing cluster
 
 	if (!cluster.initCluster()) // .conf parsing
