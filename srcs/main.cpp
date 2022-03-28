@@ -1,16 +1,17 @@
 #include "../incs/webserv.hpp"
 #include "../incs/conf_parser.hpp"
 #include "../incs/cluster.hpp"
-
+#include "../incs/error.hpp"
 int launch_cluster(char *conf_file)
 {
-	// Cluster cluster;
 	Parser			parser;
-	configContext	config;
+	Cluster			cluster;
 
 	std::vector<std::string> tokens = parser.ParseFile(conf_file);
-	config.exploitTokens(tokens);
-	config.printConfig();
+	cluster.exploitTokens(tokens);
+	cluster.initCluster();
+	cluster.launch();
+	//config.printConfig();
 	// // Parsing .conf
 	// try
 	// {

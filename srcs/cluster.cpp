@@ -4,8 +4,8 @@
 #include <string>
 
 #include "../incs/cluster.hpp"
-
-std::vector<s_location>		configContext::_setupLocation(std::vector<std::string> &loc) {
+#include "../incs/cosmetics.hpp"
+std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) {
 	std::vector<s_location>	s_lc;
 	s_location				lc;
 
@@ -41,7 +41,7 @@ std::vector<s_location>		configContext::_setupLocation(std::vector<std::string> 
 	return s_lc;
 }
 
-s_server	configContext::_setupServer(std::vector<std::string> &serv, std::vector<std::string> &loc) {
+s_server	Cluster::_setupServer(std::vector<std::string> &serv, std::vector<std::string> &loc) {
 	s_server sv;
 	std::vector<std::string>::iterator it = serv.begin();
 	std::vector<std::string>::iterator ite = serv.end();
@@ -100,7 +100,7 @@ s_server	configContext::_setupServer(std::vector<std::string> &serv, std::vector
 	return sv;
 }
 
-void	configContext::exploitTokens(std::vector<std::string> &tokens) {
+void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 	std::vector<std::string> vec = tokens;
 	std::vector<std::string> loc;
 	std::vector<std::string> serv;
@@ -140,7 +140,7 @@ void	configContext::exploitTokens(std::vector<std::string> &tokens) {
 				}
 				serv.push_back(*it);
 				vec.erase(it);
-				_server.push_back(_setupServer(serv, loc));
+				_serverConf.push_back(_setupServer(serv, loc));
 				serv.clear();
 				loc.clear();
 				ite = vec.end();
@@ -151,9 +151,9 @@ void	configContext::exploitTokens(std::vector<std::string> &tokens) {
 	}
 }
 
-void	configContext::printConfig(void) {
-	std::vector<s_server>::iterator it = _server.begin();
-	std::vector<s_server>::iterator ite = _server.end();
+void	Cluster::printConfig(void) {
+	std::vector<s_server>::iterator it = _serverConf.begin();
+	std::vector<s_server>::iterator ite = _serverConf.end();
 	for ( ; it != ite; it++) {
 		std::cout << "[server]" << std::endl;
 		if (!it->listen.empty()) {
@@ -191,6 +191,88 @@ void	configContext::printConfig(void) {
 				}
 				if (!i->autoindex.empty())
 					std::cout << "autoindex : " << i->autoindex << std::endl;
+			}
+		}
+	}
+}
+
+bool		Cluster::initCluster(){
+	std::vector<s_server>::iterator it = _serverConf.begin();
+	std::vector<s_server>::iterator ite = _serverConf.end();
+	for ( ; it != ite; it++) {
+		// for each port we instatiate server
+		int port = atoi(it->listen.c_str());
+		_servers.insert(std::make_pair(port, new Server(port)));
+		long		fd;
+		if (_servers[port]->setup() != -1)
+		{
+			fd = _servers[port]->getSocket();
+			FD_SET(fd, &_msfd); // bind socket (fd) to master fd (_msfd) see select doc.
+			if (fd > _max_sk)
+				_max_sk = fd;
+		}
+		else {
+			_servers.erase(port); // if failed setup, remove from server list
+		}
+	}
+	return true;
+}
+
+bool		Cluster::launch(){
+	struct timeval tv;
+	int recVal = 0;
+	tv.tv_sec = 1;
+	while(true)
+	{
+		fd_set rfds;
+
+		FD_ZERO(&rfds);
+		memcpy(&rfds, &_msfd, sizeof(_msfd));
+		std::cout << "\rWaiting for client" << std::flush;
+		recVal = select(_max_sk + 1, &rfds, NULL, NULL, &tv); // wait for change on rfds
+		switch(recVal)
+		{
+			case(0):{//Timeout
+				break;
+			}
+			case(-1):
+			{
+				std::cerr << RED << "\tSelect error :" << errno << WHITE << std::flush;
+				for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++){
+					close(it->first);
+				}
+				break ;
+			}
+			default: //change append
+			{
+				for (std::map<int, Server *>::iterator it = _clients.begin(); it != _clients.end(); it++){ //iterate on connected clients
+					if (FD_ISSET(it->first, &rfds)){ // search the client who send us smth
+						int client_fd = it->first;
+						if (it->second->listenClient(client_fd) <= 0){ // listen to it
+							std::cout << RED << "\nConnection "<< client_fd<< " closed." << WHITE << std::endl;
+							close(it->first);
+							FD_CLR(it->first, &rfds);
+							FD_CLR(it->first, &_msfd);
+							_clients.erase(it->first);
+							it = _clients.begin();
+						}
+						recVal = 0;
+						break;
+					}
+				}
+				for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++){ // iterate on server
+					if (FD_ISSET(it->second->getSocket(), &rfds)){ // search for the server who send us smth
+						int connection = it->second->accept(); // accept incomming connection
+						if (connection != -1){
+							std::cout << GREEN << "\nClient connected at port : " << it->second->getPort() << WHITE<< std::endl;
+							FD_SET(connection, &_msfd); // root client socket (connection) to master fd
+							_clients.insert(std::make_pair(connection, it->second)); // add client to connected client (_clients)
+							if (connection > _max_sk)
+								_max_sk = connection;
+						}
+					}
+				}
+				break;
 			}
 		}
 	}
