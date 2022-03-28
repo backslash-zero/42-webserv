@@ -1,12 +1,8 @@
 #ifndef CONFIG_CONTEXT_HPP
 #define CONFIG_CONTEXT_HPP
 
-#include <string>
-#include <vector>
-#include <list>
-#include <map>
-#include <cstdlib>
-#include "server.hpp"
+#include "../incs/server.hpp"
+
 struct s_location {
 	std::string							root;
 	std::list<std::string>				index;

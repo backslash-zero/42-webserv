@@ -1,10 +1,7 @@
 #ifndef PARSER_HPP
 # define PARSER_HPP
 
-# include <string>
-# include <vector>
-# include <iterator>
-# include <iostream>
+#include "webserv.hpp"
 
 
 struct SingleSetting {

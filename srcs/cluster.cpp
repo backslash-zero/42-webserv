@@ -1,10 +1,6 @@
-#include <iostream>
-#include <iterator>
-#include <string.h>
-#include <string>
 
 #include "../incs/cluster.hpp"
-#include "../incs/cosmetics.hpp"
+
 std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) {
 	std::vector<s_location>	s_lc;
 	s_location				lc;

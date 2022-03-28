@@ -1,7 +1,5 @@
 #pragma once
 
-// #include "cluster.hpp"
-//#include "error.hpp"
 #include "cosmetics.hpp"
 #include <unistd.h>
 #include <cstdlib>
@@ -10,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <ostream>
 
 #include <netinet/in.h>
 #include <errno.h>

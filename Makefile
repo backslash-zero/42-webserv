@@ -10,7 +10,7 @@ SRC_PATH = srcs/
 
 OBJ_PATH = obj/
 
-SRC = main.cpp cluster.cpp conf_parser.cpp server.cpp
+SRC = main.cpp cluster.cpp conf_parser.cpp server.cpp 
 
 OBJ = $(addprefix $(OBJ_PATH), $(SRC:.cpp=.o))
 

@@ -2,6 +2,7 @@
 #include "../incs/conf_parser.hpp"
 #include "../incs/cluster.hpp"
 #include "../incs/error.hpp"
+
 int launch_cluster(char *conf_file)
 {
 	Parser			parser;

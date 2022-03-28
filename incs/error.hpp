@@ -1,9 +1,6 @@
 #pragma once
 
-#include <string>
-#include <iostream>
-
-#include "cosmetics.hpp"
+#include "webserv.hpp"
 
 void printError(const std::string &str)
 {
@@ -24,3 +21,8 @@ void printError(const std::string &str, const std::string &str2)
 {
 	std::cerr << RED << str << RESET << str2 << std::endl;
 }
+
+/*void printError(const std::string &str);
+void printTip(const std::string &str);
+void printBoldError(const std::string &str);
+void printError(const std::string &str, const std::string &str2);*/
