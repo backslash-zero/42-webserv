@@ -1,5 +1,6 @@
 
 #include "../incs/server.hpp"
+#include "../incs/request.hpp"
 
 Server::Server(int port):_port(port){
 
@@ -12,6 +13,9 @@ int 	Server::setup(){
 		std::cerr << "Failed to create socket. errno: " << errno << std::endl;
 		return -1;
 	}
+	int on = 1;
+    /* Enable address reuse */
+    setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on) );
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	sockaddr.sin_port = htons(_port);
@@ -49,12 +53,13 @@ bool 	Server::listenClient(int client_fd){
 	if (ret <= 0)
 		return ret;
 	_requests[client_fd] += buffer; //add content to client's request
-	std::cout << std::endl << GREEN << "Client on fd " << client_fd << " send \n[" << _requests[client_fd] << "]" << WHITE << std::endl;
+	//std::cout << std::endl << GREEN << "Client on fd " << client_fd << " send \n[" << _requests[client_fd] << "]" << WHITE << std::endl;
 	if (_requests[client_fd].find("\r\n\r\n") != std::string::npos){ // if end of request
 		// process it
-		//Request req(_requests[client_fd]);
+		Request req(_requests[client_fd]);
+		std::cout << req;
 		//send response
-		::send(client_fd, "HTTP/1.1 200 OK", 16, 0); //exemple
+		::send(client_fd, "ok\n", 3, 0); //exemple
 		_requests[client_fd].clear(); //clear request
 	}
 	return ret;
