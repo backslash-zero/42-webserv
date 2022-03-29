@@ -1,2 +1,7 @@
-obj
+# Commons
+.DS_Store
+*.txt
+./obj/
+
+# Executable
 webserv
