@@ -281,7 +281,8 @@ bool		Cluster::launch(){
 				for (std::map<int, Server *>::iterator it = _clients.begin(); it != _clients.end(); it++){ //iterate on connected clients
 					if (FD_ISSET(it->first, &rfds)){ // search the client who send us smth
 						int client_fd = it->first;
-						if (it->second->listenClient(client_fd) <= 0){ // listen to it
+						int ret = it->second->listenClient(client_fd);
+						if ( ret <= 0){ // listen to it
 							std::cout << RED << "\nConnection "<< client_fd<< " closed." << WHITE << std::endl;
 							close(it->first);
 							FD_CLR(it->first, &rfds);

@@ -1,0 +1,5 @@
+ / HTTP/1.1
+Host: webserv
+Connection: keep-alive
+User-Agent: custom-client
+Accept-Language: fr-CH, fr;q=0.9,en-US,en;q=0.5

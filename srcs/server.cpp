@@ -50,6 +50,7 @@ bool 	Server::listenClient(int client_fd){
 	int ret;
 	char buffer[8192] = {0};
 	ret = ::recv(client_fd, buffer, 8192 - 1, 0); //listen to client
+	std::cout << ret << std::endl;
 	if (ret <= 0)
 		return ret;
 	_requests[client_fd] += buffer; //add content to client's request
@@ -61,8 +62,9 @@ bool 	Server::listenClient(int client_fd){
 		//send response
 		::send(client_fd, "ok\n", 3, 0); //exemple
 		_requests[client_fd].clear(); //clear request
+		return (req.getRet() >= 400 ? 0 : 1);
 	}
-	return ret;
+	return 1;
 }
 
 Server::~Server(){

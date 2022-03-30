@@ -20,6 +20,10 @@ $(NAME): $(OBJ)
 					$(COMPILER) $(FLAGS) $(OBJ) -I $(HEADER) -o $(NAME) 
 					@echo $(NAME) created
 
+client: test/client.o
+					$(COMPILER) $(FLAGS) test/client.o -o client 
+					@echo client created
+
 ${OBJ_PATH}:
 					@mkdir -p $@
 
@@ -28,10 +32,12 @@ ${OBJ_PATH}%.o:		$(SRC_PATH)%.cpp
 
 clean:
 					/bin/rm -rf  $(OBJ_PATH)
+					/bin/rm -rf  test/client.o
 					@echo Objects and libraries cleaned
 
 fclean:				clean
 					@/bin/rm -f $(NAME)
+					@/bin/rm -f client
 					@echo $(NAME) deleted
 
 re:					fclean all
