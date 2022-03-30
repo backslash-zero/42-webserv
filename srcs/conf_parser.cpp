@@ -97,6 +97,10 @@ std::vector<std::string>			Parser::ParseFile(std::string filename) {
 		lines += StripLine(*it);
 	}
 	parsed = ParseSection(lines);
+	int openBracket = count(parsed.begin(), parsed.end(), "{");
+	int closeBracket = count(parsed.begin(), parsed.end(), "}");
+	if (openBracket != closeBracket)
+		throw std::runtime_error("invalid file");
 	return parsed;
 }
 

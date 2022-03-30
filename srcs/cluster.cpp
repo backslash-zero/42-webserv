@@ -9,20 +9,41 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 	std::vector<std::string>::iterator ite = loc.end();
 
 	while (it != ite) {
+		if (it->compare("location") == 0) {
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::runtime_error("argument not find");
+			lc.path = *it;
+			it++;
+			if (it->compare("{") != 0)
+				throw std::runtime_error("bracket is missing");
+			it--;
+		}
 		if (it->compare("root") == 0) {
 			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::runtime_error("argument not find");
 			lc.root = *it;
 		}
 		if (it->compare("index") == 0) {
 			while (it != ite && it->compare(";") != 0) {
 				it++;
-				if (it->compare(";") != 0)
+				if (it != ite && it->compare(";") != 0)
 					lc.index.push_back(*it);
 			}
 		}
 		if (it->compare("autoindex") == 0) {
 			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::runtime_error("argument not find");
 			lc.root = *it;
+		}
+		if (it->compare("methods") == 0) {
+			while (it != ite && it->compare(";") != 0) {
+				it++;
+				if (it != ite && it->compare(";") != 0)
+					lc.methods.push_back(*it);
+			}
 		}
 		if (it->compare("}") == 0) {
 			s_lc.push_back(lc);
@@ -37,57 +58,71 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 	return s_lc;
 }
 
-s_server	Cluster::_setupServer(std::vector<std::string> &serv, std::vector<std::string> &loc) {
-	s_server sv;
+s_server_config	Cluster::_setupServer(std::vector<std::string> &serv, std::vector<std::string> &loc) {
+	s_server_config sv;
 	std::vector<std::string>::iterator it = serv.begin();
 	std::vector<std::string>::iterator ite = serv.end();
 
 	while (it != ite) {
 		if (it->compare("listen") == 0) {
 			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::runtime_error("argument not find");
 			sv.listen = *it;
 		}
 		if (it->compare("server_name") == 0) {
 			while (it != ite && it->compare(";") != 0) {
 				it++;
-				if (it->compare(";") != 0)
+				if (it != ite && it->compare(";") != 0)
 					sv.server_name.push_back(*it);
 			}
 		}
 		if (it->compare("error_page") == 0) {
-			std::vector<std::string>::iterator tmp = it;
-			while (it != ite && it->compare(";") != 0)
-				it++;
-			it--;
-			std::string value = *it;
-			serv.erase(it);
-			it = tmp;
-			while (it != ite && it->compare(";") != 0) {
-				it++;
-				if (it->compare(";") != 0) {
-					std::string tmp = *it;
-					sv.error_page.insert(std::make_pair(atoi(tmp.c_str()), value));
-				}
-			}
+			// std::vector<std::string>::iterator tmp = it;
+			// while (it != ite && it->compare(";") != 0)
+			// 	it++;
+			// it--;
+			// std::string value = *it;
+			// serv.erase(it);
+			// it = tmp;
+			// while (it != ite && it->compare(";") != 0) {
+			// 	it++;
+			// 	if (it->compare(";") != 0) {
+			// 		std::string tmp = *it;
+			// 		sv.error_page.insert(std::make_pair(atoi(tmp.c_str()), value));
+			// 	}
+			// }
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::runtime_error("argument not find");
+			std::string tmp = *it;
+			it++;
+			if (it != ite || it->compare(";") != 0)
+				sv.error_page.insert(std::make_pair(tmp, *it));
 		}
 		if (it->compare("client_max_body_size") == 0) {
 			it++;
-			std::string tmp1 = *it;
-			sv.client_max_body_size = atoi(tmp1.c_str());
+			if (it == ite || it->compare(";") == 0)
+				throw std::runtime_error("argument not find");
+			sv.client_max_body_size = *it;
 		}
 		if (it->compare("root") == 0) {
 			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::runtime_error("argument not find");
 			sv.root = *it;
 		}
 		if (it->compare("index") == 0) {
 			while (it != ite && it->compare(";") != 0) {
 				it++;
-				if (it->compare(";") != 0)
+				if (it != ite && it->compare(";") != 0)
 					sv.index.push_back(*it);
 			}
 		}
 		if (it->compare("autoindex") == 0) {
 			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::runtime_error("argument not find");
 			sv.root = *it;
 		}
 		it++;
@@ -107,20 +142,20 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 		if (it->compare("server") == 0) {
 			it++;
 			if (it->compare("{") != 0)
-				std::cout << "error { missing" << std::endl;
+				throw std::runtime_error("bracket is missing");
 			else {
 				it--;
 				while (it != ite && it->compare("}") != 0) {
 					if (it->compare("location") == 0) {
-						it++;
-						if (it->compare("/") != 0)
-							std::cout << "error location_match" << std::endl;
-						else {
-							it++;
-							if (it->compare("{") != 0)
-								std::cout << "error { missing" << std::endl;
-							it--;
-							it--;
+						// it++;
+						// if (it->compare("/") != 0)
+						// 	std::cout << "error location_match" << std::endl;
+						// else {
+						// 	it++;
+						// 	if (it->compare("{") != 0)
+						// 		throw std::runtime_error("bracket is missing");
+						// 	it--;
+						// 	it--;
 							while (it != ite && it->compare("}") != 0) {
 								loc.push_back(*it);
 								vec.erase(it);
@@ -129,7 +164,7 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 							vec.erase(it);
 							ite = vec.end();
 							continue ;
-						}
+						// }
 					}
 					serv.push_back(*it);
 					vec.erase(it);
@@ -148,8 +183,8 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 }
 
 void	Cluster::printConfig(void) {
-	std::vector<s_server>::iterator it = _serverConf.begin();
-	std::vector<s_server>::iterator ite = _serverConf.end();
+	std::vector<s_server_config>::iterator it = _serverConf.begin();
+	std::vector<s_server_config>::iterator ite = _serverConf.end();
 	for ( ; it != ite; it++) {
 		std::cout << "[server]" << std::endl;
 		if (!it->listen.empty()) {
@@ -160,10 +195,10 @@ void	Cluster::printConfig(void) {
 				std::cout << "server_name : " << *i << std::endl;
 		}
 		if (!it->error_page.empty()) {
-			for (std::map<int, std::string>::iterator i = it->error_page.begin(); i != it->error_page.end(); i++)
+			for (std::map<std::string, std::string>::iterator i = it->error_page.begin(); i != it->error_page.end(); i++)
 				std::cout << "error_page key : " << i->first << " value : " << i->second << std::endl;
 		}
-		if (it->client_max_body_size) {
+		if (!it->client_max_body_size.empty()) {
 			std::cout << "client_max_body_size : " << it->client_max_body_size << std::endl;
 		}
 		if (!it->root.empty()) {
@@ -178,6 +213,9 @@ void	Cluster::printConfig(void) {
 		if (!it->location.empty()) {
 			for (std::vector<s_location>::iterator i = it->location.begin(); i != it->location.end(); i++) {
 				std::cout << "[location]" << std::endl;
+				if (!i->path.empty()) {
+					std::cout << "path : " << i->path << std::endl;
+				}
 				if (!i->root.empty()) {
 					std::cout << "root : " << i->root << std::endl;
 				}
@@ -193,8 +231,8 @@ void	Cluster::printConfig(void) {
 }
 
 bool		Cluster::initCluster(){
-	std::vector<s_server>::iterator it = _serverConf.begin();
-	std::vector<s_server>::iterator ite = _serverConf.end();
+	std::vector<s_server_config>::iterator it = _serverConf.begin();
+	std::vector<s_server_config>::iterator ite = _serverConf.end();
 	for ( ; it != ite; it++) {
 		// for each port we instatiate server
 		int port = atoi(it->listen.c_str());
