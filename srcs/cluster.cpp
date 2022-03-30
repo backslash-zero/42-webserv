@@ -237,7 +237,7 @@ bool		Cluster::initCluster(){
 		// for each port we instatiate server
 		int port = atoi(it->listen.c_str());
 		_servers.insert(std::make_pair(port, new Server(port)));
-		long		fd;
+		long		fd = 0;
 		if (_servers[port]->setup() != -1)
 		{
 			fd = _servers[port]->getSocket();
@@ -271,11 +271,10 @@ bool		Cluster::launch(){
 			}
 			case(-1):
 			{
-				std::cerr << RED << "\tSelect error :" << errno << WHITE << std::flush;
-				for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++){
-					close(it->first);
-				}
-				break ;
+				perror("\nSelect failed");
+				for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++)
+					close(it->second->getSocket());
+				return false;
 			}
 			default: //change append
 			{
@@ -310,4 +309,8 @@ bool		Cluster::launch(){
 			}
 		}
 	}
+}
+
+Cluster::Cluster(){
+	_max_sk = -1;
 }

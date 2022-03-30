@@ -27,14 +27,14 @@ struct s_server_config {
 class Cluster {
 
 	public:
+		Cluster();
 
-	void	exploitTokens(std::vector<std::string> &tokens);
-	bool	initCluster();
-	bool	launch();
-	void	printConfig(void);
+		void	exploitTokens(std::vector<std::string> &tokens);
+		bool	initCluster();
+		bool	launch();
+		void	printConfig(void);
 
 	private:
-
 	std::vector<s_server_config>	_serverConf;
 	std::map<int, Server *> _servers; // stores all servers created
 	std::map<int, Server *> _clients; // stores all clients connected to serv
@@ -44,7 +44,7 @@ class Cluster {
 	std::vector<s_location>	_setupLocation(std::vector<std::string> &loc);
 	s_server_config			_setupServer(std::vector<std::string> &serv, std::vector<std::string> &loc);
 	void					_clearLocation(s_location lc);
-
+  
 	// Exceptions:
 	// 1 - File not found
 	// class fileNotFoundException : public std::exception
