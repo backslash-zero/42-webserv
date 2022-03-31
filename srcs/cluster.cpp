@@ -68,7 +68,12 @@ s_server_config	Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 			it++;
 			if (it == ite || it->compare(";") == 0)
 				throw std::runtime_error("argument not find");
+			std::string tmp = *it;
 			sv.listen = *it;
+			if (tmp.find(':') != std::string::npos)
+				sv.port = atoi(tmp.substr(tmp.find(':') + 1, tmp.length() - tmp.find(':')).c_str());
+			else
+				sv.port = atoi(tmp.c_str());
 		}
 		if (it->compare("server_name") == 0) {
 			while (it != ite && it->compare(";") != 0) {
@@ -231,12 +236,13 @@ void	Cluster::printConfig(void) {
 }
 
 bool		Cluster::initCluster(){
-	std::vector<s_server_config>::iterator it = _serverConf.begin();
-	std::vector<s_server_config>::iterator ite = _serverConf.end();
+	_config = _getListen();
+	t_conf::iterator it = _config.begin();
+	t_conf::iterator ite = _config.end();
 	for ( ; it != ite; it++) {
 		// for each port we instatiate server
-		int port = atoi(it->listen.c_str());
-		_servers.insert(std::make_pair(port, new Server(port)));
+		int port = it->first;
+		_servers.insert(std::make_pair(port, new Server(port, it->second)));
 		long		fd = 0;
 		if (_servers[port]->setup() != -1)
 		{
@@ -314,4 +320,28 @@ bool		Cluster::launch(){
 
 Cluster::Cluster(){
 	_max_sk = -1;
+}
+
+Cluster::t_conf Cluster::_getListen()
+{
+	/*
+		get all port that we need to listen to
+		create map of port & vector of server
+	*/
+	t_conf res;
+	std::vector<s_server_config>::iterator it = _serverConf.begin();
+	std::vector<s_server_config>::iterator ite = _serverConf.end();
+	for ( ; it != ite; it++) {
+		res[it->port].push_back(*it);
+	}
+	// display map
+	/*t_conf::iterator b;
+	for (b = res.begin(); b != res.end(); b++)
+	{
+		std::cout << b->first << std::endl;
+		std::vector<s_server_config>::iterator z;
+		for (z = b->second.begin(); z != b->second.end(); z++)
+			std::cout << z->server_name.front() << std::endl;
+	}*/
+	return res;
 }

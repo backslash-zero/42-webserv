@@ -1,9 +1,9 @@
 
 #include "../incs/server.hpp"
 #include "../incs/request.hpp"
+#include "../incs/cluster.hpp"
 
-Server::Server(int port):_port(port){
-
+Server::Server(int port, std::vector<s_server_config> conf):_port(port), _conf(conf){
 }
 
 int 	Server::setup(){
@@ -30,7 +30,13 @@ int 	Server::setup(){
 		close(_sockfd);
 		return -1;
 	};
-	std::cout << GREEN << "Server listenning on port " << _port << WHITE << std::endl;
+	std::cout << GREEN << "Server listenning on port " << _port << std::endl;
+	std::cout << "Virtual server :" << std::endl;
+	std::vector<s_server_config>::iterator b;
+	for (b = _conf.begin(); b != _conf.end(); b++){
+		std::cout << b->server_name.front() << std::endl;
+	}
+	std::cout << WHITE << std::endl;
 	return 0;
 }
 
