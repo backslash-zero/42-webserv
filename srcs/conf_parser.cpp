@@ -88,16 +88,20 @@ void	Parser::check_brackets(std::vector<std::string> &conf) {
 	int openBracket = 0, closeBracket = 0;
 	std::vector<std::string>::iterator it = conf.begin(), ite = conf.end();
 
-	for (; it != ite; ++it) {
-		if (it->compare("{")) {
-			if (openBracket == closeBracket && (it - 1 < conf.begin() || it->compare("server") != 0))
+	for (; it != ite; it++) {
+		if (it->compare("{") == 0) {
+			it--;
+			if (openBracket == closeBracket && (it < conf.begin() || it->compare("server") != 0))
 				throw std::logic_error("Invalid scope type");
 			openBracket++;
+			it++;
 		}
-		else if (it->compare("}")) {
-			if (openBracket == closeBracket || (it - 1)->compare(";") != 0 && (it - 1)->compare("{") != 0)
+		if (it->compare("}") == 0) {
+			it--;
+			if (openBracket == closeBracket || (it->compare(";") != 0 && it->compare("{") != 0 && it->compare("}") != 0))
 				throw std::logic_error("Invalid end of scope");
 			closeBracket++;
+			it++;
 		}
 	}
 	if (openBracket != closeBracket)
