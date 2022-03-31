@@ -84,6 +84,27 @@ std::vector<std::string>		Parser::ParseSection(std::string &src) {
 	return token;
 }
 
+void	Parser::check_brackets(std::vector<std::string> &conf) {
+	int openBracket = 0, closeBracket = 0;
+	std::vector<std::string>::iterator it = conf.begin(), ite = conf.end();
+
+	for (; it != ite; ++it) {
+		if (it->compare("{")) {
+			if (openBracket == closeBracket && (it - 1 < conf.begin() || it->compare("server") != 0))
+				throw std::logic_error("Invalid scope type");
+			openBracket++;
+		}
+		else if (it->compare("}")) {
+			if (openBracket == closeBracket || (it - 1)->compare(";") != 0 && (it - 1)->compare("{") != 0)
+				throw std::logic_error("Invalid end of scope");
+			closeBracket++;
+		}
+	}
+	if (openBracket != closeBracket)
+		throw std::logic_error("Invalid brackets");
+}
+
+
 std::vector<std::string>			Parser::ParseFile(std::string filename) {
 	std::vector<std::string> file;
 	std::string				lines = "";
@@ -97,12 +118,6 @@ std::vector<std::string>			Parser::ParseFile(std::string filename) {
 		lines += StripLine(*it);
 	}
 	parsed = ParseSection(lines);
-	int openBracket = count(parsed.begin(), parsed.end(), "{");
-	int closeBracket = count(parsed.begin(), parsed.end(), "}");
-	if (openBracket != closeBracket)
-		throw std::runtime_error("invalid file");
+	check_brackets(parsed);
 	return parsed;
 }
-
-
-

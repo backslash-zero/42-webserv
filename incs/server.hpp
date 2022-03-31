@@ -8,8 +8,8 @@ struct s_location {
 	std::list<std::string>				index;
 	std::string							autoindex;
 	std::vector<std::string>			methods;
-	std::map<std::string, std::string>	fastcgi_param;
-	std::map<std::string, std::string>	fastcgi_pass;
+	std::string							fastcgi_pass;
+	// std::map<std::string, std::string>	fastcgi_param;
 };
 
 struct s_server_config {
@@ -28,24 +28,24 @@ class Server{
 
 	public:
 
-		Server(int port, std::vector<s_server_config>);
-		~Server();
-		int		setup();
-		int		accept();
-		bool 	listenClient(int client_fd);
+	Server(int port, std::vector<s_server_config>);
+	~Server();
+	int		setup();
+	int		accept();
+	bool 	listenClient(int client_fd);
 
-		int 			getPort();
-		int				getSocket();
-		sockaddr_in 	getSockaddr();
+	int 			getPort();
+	int				getSocket();
+	sockaddr_in 	getSockaddr();
 
-		std::string 	createResponse(int code, std::string param);
-		std::string		getHtmlFile(const std::string& path);
+	std::string 	createResponse(int code, std::string param);
+	std::string		getHtmlFile(const std::string& path);
 
 	private:
 
-		int							_port;
-		int							_sockfd;
-		sockaddr_in					sockaddr;
-		std::map<int, std::string>	_requests; // stores requests.
-		std::vector<s_server_config> _conf; //conf of server/host
+	int							_port;
+	int							_sockfd;
+	sockaddr_in					sockaddr;
+	std::map<int, std::string>	_requests; // stores requests.
+	std::vector<s_server_config> _conf; //conf of server/host
 };

@@ -3,15 +3,6 @@
 
 #include "webserv.hpp"
 
-
-struct SingleSetting {
-	public:
-
-	std::string		section;
-	std::string		key;
-	std::string		value;
-};
-
 class Parser {
 	
 	public:
@@ -19,6 +10,7 @@ class Parser {
 	std::vector<std::string>		getLineFile(std::string filename);
 	std::string						StripLine(std::string in);
 	std::vector<std::string>		ParseSection(std::string &src);
+	void							check_brackets(std::vector<std::string> &conf);
 	std::vector<std::string>		ParseFile(std::string filename);
 };
 

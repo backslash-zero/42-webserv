@@ -12,17 +12,17 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 		if (it->compare("location") == 0) {
 			it++;
 			if (it == ite || it->compare(";") == 0)
-				throw std::runtime_error("argument not find");
+				throw std::logic_error("argument not find");
 			lc.path = *it;
 			it++;
 			if (it->compare("{") != 0)
-				throw std::runtime_error("bracket is missing");
+				throw std::logic_error("bracket is missing");
 			it--;
 		}
 		if (it->compare("root") == 0) {
 			it++;
 			if (it == ite || it->compare(";") == 0)
-				throw std::runtime_error("argument not find");
+				throw std::logic_error("argument not find");
 			lc.root = *it;
 		}
 		if (it->compare("index") == 0) {
@@ -35,7 +35,7 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 		if (it->compare("autoindex") == 0) {
 			it++;
 			if (it == ite || it->compare(";") == 0)
-				throw std::runtime_error("argument not find");
+				throw std::logic_error("argument not find");
 			lc.root = *it;
 		}
 		if (it->compare("methods") == 0) {
@@ -45,13 +45,19 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 					lc.methods.push_back(*it);
 			}
 		}
+		if (it->compare("fastcgi_pass") == 0) {
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			lc.fastcgi_pass = *it;
+		}
 		if (it->compare("}") == 0) {
 			s_lc.push_back(lc);
 			lc.root.clear();
 			lc.index.clear();
 			lc.autoindex.clear();
-			lc.fastcgi_param.clear();
 			lc.fastcgi_pass.clear();
+			// lc.fastcgi_param.clear();
 		}
 		it++;
 	}
@@ -67,13 +73,8 @@ s_server_config	Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 		if (it->compare("listen") == 0) {
 			it++;
 			if (it == ite || it->compare(";") == 0)
-				throw std::runtime_error("argument not find");
-			std::string tmp = *it;
+				throw std::logic_error("argument not find");
 			sv.listen = *it;
-			if (tmp.find(':') != std::string::npos)
-				sv.port = atoi(tmp.substr(tmp.find(':') + 1, tmp.length() - tmp.find(':')).c_str());
-			else
-				sv.port = atoi(tmp.c_str());
 		}
 		if (it->compare("server_name") == 0) {
 			while (it != ite && it->compare(";") != 0) {
@@ -99,7 +100,7 @@ s_server_config	Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 			// }
 			it++;
 			if (it == ite || it->compare(";") == 0)
-				throw std::runtime_error("argument not find");
+				throw std::logic_error("argument not find");
 			std::string tmp = *it;
 			it++;
 			if (it != ite || it->compare(";") != 0)
@@ -108,13 +109,13 @@ s_server_config	Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 		if (it->compare("client_max_body_size") == 0) {
 			it++;
 			if (it == ite || it->compare(";") == 0)
-				throw std::runtime_error("argument not find");
+				throw std::logic_error("argument not find");
 			sv.client_max_body_size = *it;
 		}
 		if (it->compare("root") == 0) {
 			it++;
 			if (it == ite || it->compare(";") == 0)
-				throw std::runtime_error("argument not find");
+				throw std::logic_error("argument not find");
 			sv.root = *it;
 		}
 		if (it->compare("index") == 0) {
@@ -127,7 +128,7 @@ s_server_config	Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 		if (it->compare("autoindex") == 0) {
 			it++;
 			if (it == ite || it->compare(";") == 0)
-				throw std::runtime_error("argument not find");
+				throw std::logic_error("argument not find");
 			sv.root = *it;
 		}
 		it++;
@@ -147,7 +148,7 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 		if (it->compare("server") == 0) {
 			it++;
 			if (it->compare("{") != 0)
-				throw std::runtime_error("bracket is missing");
+				throw std::logic_error("bracket is missing");
 			else {
 				it--;
 				while (it != ite && it->compare("}") != 0) {
@@ -158,7 +159,7 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 						// else {
 						// 	it++;
 						// 	if (it->compare("{") != 0)
-						// 		throw std::runtime_error("bracket is missing");
+						// 		throw std::logic_error("bracket is missing");
 						// 	it--;
 						// 	it--;
 							while (it != ite && it->compare("}") != 0) {
@@ -190,7 +191,7 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 void	Cluster::printConfig(void) {
 	std::vector<s_server_config>::iterator it = _serverConf.begin();
 	std::vector<s_server_config>::iterator ite = _serverConf.end();
-	for ( ; it != ite; it++) {
+	for (; it != ite; it++) {
 		std::cout << "[server]" << std::endl;
 		if (!it->listen.empty()) {
 			std::cout << "listen : " << it->listen << std::endl;
@@ -230,6 +231,8 @@ void	Cluster::printConfig(void) {
 				}
 				if (!i->autoindex.empty())
 					std::cout << "autoindex : " << i->autoindex << std::endl;
+				if (!i->fastcgi_pass.empty())
+					std::cout << "fastcgi_pass : " << i->fastcgi_pass << std::endl;
 			}
 		}
 	}
