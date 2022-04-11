@@ -14,6 +14,7 @@
 #include <errno.h>
 
 #include <string.h>
+#include <sstream>
 #include <vector>
 #include <list>
 #include <map>
@@ -21,6 +22,7 @@
 
 #include <sys/wait.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/select.h>
 #include <sys/time.h>
 #include <sys/types.h>

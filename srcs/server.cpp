@@ -1,6 +1,7 @@
 
 #include "../incs/server.hpp"
 #include "../incs/request.hpp"
+#include "../incs/response.hpp"
 #include "../incs/cluster.hpp"
 
 Server::Server(int port, std::vector<s_server_config> conf):_port(port), _conf(conf){
@@ -56,7 +57,6 @@ bool 	Server::listenClient(int client_fd){
 	int ret;
 	char buffer[8192] = {0};
 	ret = ::recv(client_fd, buffer, 8192 - 1, 0); //listen to client
-	std::cout << ret << std::endl;
 	if (ret <= 0)
 		return ret;
 	_requests[client_fd] += buffer; //add content to client's request
@@ -66,7 +66,9 @@ bool 	Server::listenClient(int client_fd){
 		Request req(_requests[client_fd]);
 		std::cout << req;
 		//send response
-		::send(client_fd, "ok\n", 3, 0); //exemple
+		Response resp(req, this);
+		std::string res = resp.process();
+		::send(client_fd, res.c_str(), res.size(), 0); //exemple
 		_requests[client_fd].clear(); //clear request
 		return (req.getRet() >= 400 ? 0 : 1);
 	}
@@ -90,35 +92,6 @@ sockaddr_in 	Server::getSockaddr(){
 	return sockaddr;
 }
 
-/*std::string		getHtmlFile(const std::string& path)
-{
-	std::ofstream		file;
-	std::stringstream	buffer;
-
-	file.open(path.c_str(), std::ifstream::in);
-	buffer << file.rdbuf();
-	file.close();
-	return (buffer.str());
+std::vector<s_server_config> Server::getConf(){
+	return _conf;
 }
-
-//exemple
-std::string createResponse(int code, std::string param){
-	
-	std::stringstream ss;
-	// setup header
-	ss << "HTTP/1.1" << " " << code << std::endl;
-	ss << "Server: " << "localhost:" << _port << std::endl;
-
-	if (param.size() >= 0){
-		ss << "Content-Type: " << "text/html\n"; // Static need to be modified
-		ss << "Content-Length: " << getHtmlFile(param).size() << std::endl;
-	}
-	ss << "Connection: " << "keep-alive\n";  // Static need to be modified
-	
-	//setup body
-	if (param.size() >=0){
-		ss << "\r\n";
-		ss << getHtmlFile(param);
-		ss << "\r\n\r\n";
-	}
-	return (ss.str());*/

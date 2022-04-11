@@ -70,15 +70,6 @@ std::string		choose_idx(void)
 	return (choice);
 }
 
-std::string		choose_responseFolder(void)
-{
-	std::string		choice;
-
-	std::cout << GREEN << "Choose response folder (exemple : response)" << std::endl;
-	getline(std::cin, choice);
-	return (choice);
-}
-
 std::string		sendRequest(int port, std::string filename, std::string responseFolder)
 {
 	int					sock;
@@ -165,7 +156,7 @@ int		main(void)
 	std::ofstream		myfile;
 
 	port = choose_port();
-	responseFodler = "test/response/" + choose_responseFolder() + ".txt";
+	responseFodler = "test/response/response.txt";
 	type = choose_type();
   	myfile.open(responseFodler, std::ios::trunc);
   	myfile.close();

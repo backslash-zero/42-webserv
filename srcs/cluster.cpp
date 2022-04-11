@@ -335,7 +335,14 @@ Cluster::t_conf Cluster::_getListen()
 	std::vector<s_server_config>::iterator it = _serverConf.begin();
 	std::vector<s_server_config>::iterator ite = _serverConf.end();
 	for ( ; it != ite; it++) {
-		res[it->port].push_back(*it);
+		int port;
+		int ret;
+		std::string tmp = it->listen;
+		if ((ret = tmp.find(':')))
+			port = atoi(tmp.substr(ret + 1, tmp.length() - ret).c_str());
+		else
+			port = atoi(tmp.c_str());
+		res[port].push_back(*it);
 	}
 	// display map
 	/*t_conf::iterator b;
