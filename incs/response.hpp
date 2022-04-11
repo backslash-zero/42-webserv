@@ -12,19 +12,19 @@ class Response{
 
 		std::string		process();
 	private:
-		Request			_req;
-		Server*			_serv;
-		s_server_config _currentConf;
-		int				_ret;
+		Request			_req; //store request
+		Server*			_serv; // server who received request
+		s_server_config _currentConf; // server's conf
+		int				_ret; // error code
 
-		std::stringstream		_response;
-		std::stringstream		_header;
-		std::stringstream 		_body;
-    	std::map <std::string, std::string> 	_headerTemplate;
-		std::map<int, std::string>		_errorTemplate;
+		std::stringstream		_response; //response which will be send
+		std::stringstream		_header; //heade rof resp
+		std::stringstream 		_body; //body of resp
+    	std::map <std::string, std::string> 	_headerTemplate; // stored header value
+		std::map<int, std::string>		_errorTemplate; // errorCode & phrase
 
 		typedef void (Response::*f)();
-		std::map <std::string, f> _methodFt;
+		std::map <std::string, f> _methodFt; //map of function's method
 
 
 		void	setupHeader(); //setup headerTemplate variable
@@ -43,7 +43,7 @@ class Response{
 		std::string		setContentLength();
 		std::string		setContentType(std::string path);
 
-		std::string		getHtmlFile(const std::string& path);
+		std::string		getHtmlFile(const std::string& path); // read file and return string
 
 		int		readFile(std::string path);
 		int		isFile(std::string path);
