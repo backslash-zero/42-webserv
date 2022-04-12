@@ -64,6 +64,14 @@
 		"iosfwd": "cpp",
 		"iostream": "cpp",
 		"mutex": "cpp",
-		"string": "cpp"
+		"string": "cpp",
+		"deque": "cpp",
+		"fstream": "cpp",
+		"iomanip": "cpp",
+		"list": "cpp",
+		"stack": "cpp",
+		"compare": "cpp",
+		"concepts": "cpp",
+		"variant": "cpp"
 	}
 }
