@@ -84,6 +84,33 @@ std::vector<std::string>		Parser::ParseSection(std::string &src) {
 	return token;
 }
 
+void	Parser::check_brackets(std::vector<std::string> &conf) {
+	int openBracket = 0, closeBracket = 0;
+	std::vector<std::string>::iterator it = conf.begin(), ite = conf.end();
+
+	for (; it != ite; it++) {
+		if (it->compare("{") == 0) {
+			it--;
+			if (openBracket == closeBracket && (it < conf.begin() || it->compare("server") != 0))
+				throw std::logic_error("Invalid scope type");
+			if (openBracket > closeBracket && ((it - 1)->compare("location") != 0 || *it->begin() != '/'))
+				throw std::logic_error("Invalid scope type location");
+			openBracket++;
+			it++;
+		}
+		if (it->compare("}") == 0) {
+			it--;
+			if (openBracket == closeBracket || (it->compare(";") != 0 && it->compare("{") != 0 && it->compare("}") != 0))
+				throw std::logic_error("Invalid end of scope");
+			closeBracket++;
+			it++;
+		}
+	}
+	if (openBracket != closeBracket)
+		throw std::logic_error("Invalid brackets");
+}
+
+
 std::vector<std::string>			Parser::ParseFile(std::string filename) {
 	std::vector<std::string> file;
 	std::string				lines = "";
@@ -97,8 +124,6 @@ std::vector<std::string>			Parser::ParseFile(std::string filename) {
 		lines += StripLine(*it);
 	}
 	parsed = ParseSection(lines);
+	check_brackets(parsed);
 	return parsed;
 }
-
-
-

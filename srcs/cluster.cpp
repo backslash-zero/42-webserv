@@ -9,86 +9,129 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 	std::vector<std::string>::iterator ite = loc.end();
 
 	while (it != ite) {
+		if (it->compare("location") == 0) {
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			lc.path = *it;
+			it++;
+			if (it->compare("{") != 0)
+				throw std::logic_error("bracket is missing");
+			it--;
+		}
 		if (it->compare("root") == 0) {
 			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
 			lc.root = *it;
 		}
 		if (it->compare("index") == 0) {
 			while (it != ite && it->compare(";") != 0) {
 				it++;
-				if (it->compare(";") != 0)
+				if (it != ite && it->compare(";") != 0){
 					lc.index.push_back(*it);
+				}
 			}
 		}
 		if (it->compare("autoindex") == 0) {
 			it++;
-			lc.root = *it;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			lc.autoindex = *it;
+		}
+		if (it->compare("methods") == 0) {
+			while (it != ite && it->compare(";") != 0) {
+				it++;
+				if (it != ite && it->compare(";") != 0)
+					lc.methods.push_back(*it);
+			}
+		}
+		if (it->compare("fastcgi_pass") == 0) {
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			lc.fastcgi_pass = *it;
 		}
 		if (it->compare("}") == 0) {
 			s_lc.push_back(lc);
 			lc.root.clear();
 			lc.index.clear();
 			lc.autoindex.clear();
-			lc.fastcgi_param.clear();
 			lc.fastcgi_pass.clear();
+			// lc.fastcgi_param.clear();
 		}
 		it++;
 	}
 	return s_lc;
 }
 
-s_server	Cluster::_setupServer(std::vector<std::string> &serv, std::vector<std::string> &loc) {
-	s_server sv;
+s_server_config	Cluster::_setupServer(std::vector<std::string> &serv, std::vector<std::string> &loc) {
+	s_server_config sv;
 	std::vector<std::string>::iterator it = serv.begin();
 	std::vector<std::string>::iterator ite = serv.end();
 
 	while (it != ite) {
 		if (it->compare("listen") == 0) {
 			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
 			sv.listen = *it;
 		}
 		if (it->compare("server_name") == 0) {
 			while (it != ite && it->compare(";") != 0) {
 				it++;
-				if (it->compare(";") != 0)
+				if (it != ite && it->compare(";") != 0)
 					sv.server_name.push_back(*it);
 			}
 		}
 		if (it->compare("error_page") == 0) {
-			std::vector<std::string>::iterator tmp = it;
-			while (it != ite && it->compare(";") != 0)
-				it++;
-			it--;
-			std::string value = *it;
-			serv.erase(it);
-			it = tmp;
-			while (it != ite && it->compare(";") != 0) {
-				it++;
-				if (it->compare(";") != 0) {
-					std::string tmp = *it;
-					sv.error_page.insert(std::make_pair(atoi(tmp.c_str()), value));
-				}
-			}
+			// std::vector<std::string>::iterator tmp = it;
+			// while (it != ite && it->compare(";") != 0)
+			// 	it++;
+			// it--;
+			// std::string value = *it;
+			// serv.erase(it);
+			// it = tmp;
+			// while (it != ite && it->compare(";") != 0) {
+			// 	it++;
+			// 	if (it->compare(";") != 0) {
+			// 		std::string tmp = *it;
+			// 		sv.error_page.insert(std::make_pair(atoi(tmp.c_str()), value));
+			// 	}
+			// }
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			std::string tmp = *it;
+			it++;
+			if (it != ite || it->compare(";") != 0)
+				sv.error_page.insert(std::make_pair(tmp, *it));
 		}
 		if (it->compare("client_max_body_size") == 0) {
 			it++;
-			std::string tmp1 = *it;
-			sv.client_max_body_size = atoi(tmp1.c_str());
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			sv.client_max_body_size = *it;
 		}
 		if (it->compare("root") == 0) {
 			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
 			sv.root = *it;
 		}
 		if (it->compare("index") == 0) {
 			while (it != ite && it->compare(";") != 0) {
 				it++;
-				if (it->compare(";") != 0)
+				if (it != ite && it->compare(";") != 0){
 					sv.index.push_back(*it);
+				}
 			}
 		}
 		if (it->compare("autoindex") == 0) {
 			it++;
-			sv.root = *it;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			sv.autoindex = *it;
 		}
 		it++;
 	}
@@ -107,20 +150,20 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 		if (it->compare("server") == 0) {
 			it++;
 			if (it->compare("{") != 0)
-				std::cout << "error { missing" << std::endl;
+				throw std::logic_error("bracket is missing");
 			else {
 				it--;
 				while (it != ite && it->compare("}") != 0) {
 					if (it->compare("location") == 0) {
-						it++;
-						if (it->compare("/") != 0)
-							std::cout << "error location_match" << std::endl;
-						else {
-							it++;
-							if (it->compare("{") != 0)
-								std::cout << "error { missing" << std::endl;
-							it--;
-							it--;
+						// it++;
+						// if (it->compare("/") != 0)
+						// 	std::cout << "error location_match" << std::endl;
+						// else {
+						// 	it++;
+						// 	if (it->compare("{") != 0)
+						// 		throw std::logic_error("bracket is missing");
+						// 	it--;
+						// 	it--;
 							while (it != ite && it->compare("}") != 0) {
 								loc.push_back(*it);
 								vec.erase(it);
@@ -129,7 +172,7 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 							vec.erase(it);
 							ite = vec.end();
 							continue ;
-						}
+						// }
 					}
 					serv.push_back(*it);
 					vec.erase(it);
@@ -148,9 +191,9 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 }
 
 void	Cluster::printConfig(void) {
-	std::vector<s_server>::iterator it = _serverConf.begin();
-	std::vector<s_server>::iterator ite = _serverConf.end();
-	for ( ; it != ite; it++) {
+	std::vector<s_server_config>::iterator it = _serverConf.begin();
+	std::vector<s_server_config>::iterator ite = _serverConf.end();
+	for (; it != ite; it++) {
 		std::cout << "[server]" << std::endl;
 		if (!it->listen.empty()) {
 			std::cout << "listen : " << it->listen << std::endl;
@@ -160,10 +203,10 @@ void	Cluster::printConfig(void) {
 				std::cout << "server_name : " << *i << std::endl;
 		}
 		if (!it->error_page.empty()) {
-			for (std::map<int, std::string>::iterator i = it->error_page.begin(); i != it->error_page.end(); i++)
+			for (std::map<std::string, std::string>::iterator i = it->error_page.begin(); i != it->error_page.end(); i++)
 				std::cout << "error_page key : " << i->first << " value : " << i->second << std::endl;
 		}
-		if (it->client_max_body_size) {
+		if (!it->client_max_body_size.empty()) {
 			std::cout << "client_max_body_size : " << it->client_max_body_size << std::endl;
 		}
 		if (!it->root.empty()) {
@@ -178,6 +221,9 @@ void	Cluster::printConfig(void) {
 		if (!it->location.empty()) {
 			for (std::vector<s_location>::iterator i = it->location.begin(); i != it->location.end(); i++) {
 				std::cout << "[location]" << std::endl;
+				if (!i->path.empty()) {
+					std::cout << "path : " << i->path << std::endl;
+				}
 				if (!i->root.empty()) {
 					std::cout << "root : " << i->root << std::endl;
 				}
@@ -187,18 +233,21 @@ void	Cluster::printConfig(void) {
 				}
 				if (!i->autoindex.empty())
 					std::cout << "autoindex : " << i->autoindex << std::endl;
+				if (!i->fastcgi_pass.empty())
+					std::cout << "fastcgi_pass : " << i->fastcgi_pass << std::endl;
 			}
 		}
 	}
 }
 
 bool		Cluster::initCluster(){
-	std::vector<s_server>::iterator it = _serverConf.begin();
-	std::vector<s_server>::iterator ite = _serverConf.end();
+	_config = _getListen();
+	t_conf::iterator it = _config.begin();
+	t_conf::iterator ite = _config.end();
 	for ( ; it != ite; it++) {
 		// for each port we instatiate server
-		int port = atoi(it->listen.c_str());
-		_servers.insert(std::make_pair(port, new Server(port)));
+		int port = it->first;
+		_servers.insert(std::make_pair(port, new Server(port, it->second)));
 		long		fd = 0;
 		if (_servers[port]->setup() != -1)
 		{
@@ -243,7 +292,8 @@ bool		Cluster::launch(){
 				for (std::map<int, Server *>::iterator it = _clients.begin(); it != _clients.end(); it++){ //iterate on connected clients
 					if (FD_ISSET(it->first, &rfds)){ // search the client who send us smth
 						int client_fd = it->first;
-						if (it->second->listenClient(client_fd) <= 0){ // listen to it
+						int ret = it->second->listenClient(client_fd);
+						if ( ret <= 0){ // listen to it
 							std::cout << RED << "\nConnection "<< client_fd<< " closed." << WHITE << std::endl;
 							close(it->first);
 							FD_CLR(it->first, &rfds);
@@ -275,4 +325,35 @@ bool		Cluster::launch(){
 
 Cluster::Cluster(){
 	_max_sk = -1;
+}
+
+Cluster::t_conf Cluster::_getListen()
+{
+	/*
+		get all port that we need to listen to
+		create map of port & vector of server
+	*/
+	t_conf res;
+	std::vector<s_server_config>::iterator it = _serverConf.begin();
+	std::vector<s_server_config>::iterator ite = _serverConf.end();
+	for ( ; it != ite; it++) {
+		int port;
+		int ret;
+		std::string tmp = it->listen;
+		if ((ret = tmp.find(':')))
+			port = atoi(tmp.substr(ret + 1, tmp.length() - ret).c_str());
+		else
+			port = atoi(tmp.c_str());
+		res[port].push_back(*it);
+	}
+	// display map
+	/*t_conf::iterator b;
+	for (b = res.begin(); b != res.end(); b++)
+	{
+		std::cout << b->first << std::endl;
+		std::vector<s_server_config>::iterator z;
+		for (z = b->second.begin(); z != b->second.end(); z++)
+			std::cout << z->server_name.front() << std::endl;
+	}*/
+	return res;
 }

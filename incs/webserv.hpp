@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <algorithm>
+#include <dirent.h>
 
 #include <iostream>
 #include <fstream>
@@ -15,6 +16,7 @@
 #include <errno.h>
 
 #include <string.h>
+#include <sstream>
 #include <vector>
 #include <list>
 #include <map>
@@ -22,6 +24,7 @@
 
 #include <sys/wait.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/select.h>
 #include <sys/time.h>
 #include <sys/types.h>

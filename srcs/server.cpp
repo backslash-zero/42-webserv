@@ -1,9 +1,10 @@
 
 #include "../incs/server.hpp"
 #include "../incs/request.hpp"
+#include "../incs/response.hpp"
+#include "../incs/cluster.hpp"
 
-Server::Server(int port) : _port(port)
-{
+Server::Server(int port, std::vector<s_server_config> conf):_port(port), _conf(conf){
 }
 
 int Server::setup()
@@ -34,7 +35,13 @@ int Server::setup()
 		close(_sockfd);
 		return -1;
 	};
-	std::cout << GREEN << "Server listening on port " << _port << WHITE << std::endl;
+	std::cout << GREEN << "Server listenning on port " << _port << std::endl;
+	std::cout << "Virtual server :" << std::endl;
+	std::vector<s_server_config>::iterator b;
+	for (b = _conf.begin(); b != _conf.end(); b++){
+		std::cout << b->server_name.front() << std::endl;
+	}
+	std::cout << WHITE << std::endl;
 	return 0;
 }
 
@@ -66,11 +73,14 @@ bool Server::listenClient(int client_fd)
 		// process it
 		Request req(_requests[client_fd]);
 		std::cout << req;
-		// send response
-		::send(client_fd, "ok\n", 3, 0); // exemple
-		_requests[client_fd].clear();	 // clear request
+		//send response
+		Response resp(req, this);
+		std::string res = resp.process();
+		::send(client_fd, res.c_str(), res.size(), 0); //exemple
+		_requests[client_fd].clear(); //clear request
+		return (req.getRet() >= 400 ? 0 : 1);
 	}
-	return ret;
+	return 1;
 }
 
 Server::~Server()
@@ -95,35 +105,7 @@ sockaddr_in Server::getSockaddr()
 	return sockaddr;
 }
 
-/*std::string		getHtmlFile(const std::string& path)
-{
-	std::ofstream		file;
-	std::stringstream	buffer;
-
-	file.open(path.c_str(), std::ifstream::in);
-	buffer << file.rdbuf();
-	file.close();
-	return (buffer.str());
+std::vector<s_server_config> Server::getConf(){
+	return _conf;
 }
 
-//exemple
-std::string createResponse(int code, std::string param){
-
-	std::stringstream ss;
-	// setup header
-	ss << "HTTP/1.1" << " " << code << std::endl;
-	ss << "Server: " << "localhost:" << _port << std::endl;
-
-	if (param.size() >= 0){
-		ss << "Content-Type: " << "text/html\n"; // Static need to be modified
-		ss << "Content-Length: " << getHtmlFile(param).size() << std::endl;
-	}
-	ss << "Connection: " << "keep-alive\n";  // Static need to be modified
-
-	//setup body
-	if (param.size() >=0){
-		ss << "\r\n";
-		ss << getHtmlFile(param);
-		ss << "\r\n\r\n";
-	}
-	return (ss.str());*/

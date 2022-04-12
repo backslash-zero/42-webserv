@@ -8,11 +8,16 @@ int launch_cluster(char *conf_file)
 	Parser			parser;
 	Cluster			cluster;
 
-	std::vector<std::string> tokens = parser.ParseFile(conf_file);
-	cluster.exploitTokens(tokens);
-	cluster.initCluster();
-	cluster.launch();
-	//config.printConfig();
+	try	{
+		std::vector<std::string> tokens = parser.ParseFile(conf_file);
+		cluster.exploitTokens(tokens);
+		cluster.printConfig();
+		cluster.initCluster();
+		cluster.launch();
+	}
+	catch(const std::exception& e) {
+		std::cerr << e.what() << '\n';
+	}
 	// // Parsing .conf
 	// try
 	// {

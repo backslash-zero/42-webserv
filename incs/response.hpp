@@ -1,47 +1,53 @@
 #pragma once
 
-#include <string>
-
+#include "webserv.hpp"
 #include "server.hpp"
 #include "request.hpp"
 
-#define NEWLINE "\r\n"
+class Response{
 
-class Response
-{
-public:
-	Response(Request *request, Request *server);
-	~Response(void);
+	public:
+		Response(Request &request, Server *server);
+		~Response();
 
-	// Main function
-	std::string getResponse(void);
+		std::string		process();
+	private:
+		Request			_req; //store request
+		Server*			_serv; // server who received request
+		s_server_config _currentConf; // server's conf
+		s_location		_currentLoc; // location's config
+		std::string		_currentPath; // Parsed path
+		int				_ret; // error code
 
-private:
-	// Methods responses
-	std::string getMethodResponse(void);
-	std::string headMethodResponse(void);
-	std::string postMethodResponse(void);
-	std::string putMethodResponse(void);
-	std::string deleteMethodResponse(void);
+		std::stringstream		_response; //response which will be send
+		std::stringstream		_header; //heade rof resp
+		std::stringstream 		_body; //body of resp
+    	std::map <std::string, std::string> 	_headerTemplate; // stored header value
+		std::map<int, std::string>		_errorTemplate; // errorCode & phrase
 
-	//
+		typedef void (Response::*f)();
+		std::map <std::string, f> _methodFt; //map of function's method
 
-	// Members
-	Request *_request;
-	Request *_server;
 
-	std::string _code;
-	ResponseHeader responseHeader;
-	std::string _body;
-};
+		void	setupHeader(); //setup headerTemplate variable
+		void	setupError(); // setup error code and corresponding phrase
+		void	setupConf(); // get config of the virtual server
 
-class ResponseHeader
-{
-public:
-	ResponseHeader(void);
-	~ResponseHeader(void);
+		void	setError(int ret); // set header & body for specific error code
 
-	std::string getResponseHeader(const Request &request, const Server &server);
+		void	writeResp(); // write error & body
 
-private:
+		void	getMethod();
+
+		std::string		setConnection();
+		std::string		setServer();
+		std::string		setDate();
+		std::string		setContentLength();
+		std::string		setContentType(std::string path);
+
+		std::string		getHtmlFile(const std::string& path); // read file and return string
+
+		int		readFile(std::string path);
+		int		isFile(std::string path);
+		int		autoIndex(std::string path);
 };
