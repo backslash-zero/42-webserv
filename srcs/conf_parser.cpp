@@ -93,7 +93,7 @@ void	Parser::check_brackets(std::vector<std::string> &conf) {
 			it--;
 			if (openBracket == closeBracket && (it < conf.begin() || it->compare("server") != 0))
 				throw std::logic_error("Invalid scope type");
-			if (openBracket > closeBracket && ((it - 1)->compare("location") != 0 || *it->begin() != '/'))
+			if (openBracket > closeBracket && ((it - 1)->compare("location") != 0 || (*it->begin() != '/' && *it->begin() != '.')))
 				throw std::logic_error("Invalid scope type location");
 			openBracket++;
 			it++;
