@@ -156,7 +156,7 @@ int		main(void)
 	std::ofstream		myfile;
 
 	port = choose_port();
-	responseFodler = "test/response/response.txt";
+	responseFodler = "test/response.txt";
 	type = choose_type();
   	myfile.open(responseFodler, std::ios::trunc);
   	myfile.close();

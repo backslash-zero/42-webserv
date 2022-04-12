@@ -95,6 +95,14 @@ void		Response::setupConf(){
 	}
 	if (it == _conf.end())
 		_currentConf = *_conf.begin();
+	std::vector<s_location>::iterator ite = _currentConf.location.begin();
+	for ( ; ite != _currentConf.location.end(); ite++){
+		if (ite->path == _req.getPath()) {
+			_currentLoc = *ite;
+			_currentPath = (_currentLoc.root.size() > 0 ? _currentLoc.root : _currentConf.root) + "/" +
+							(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
+		}
+	}
 }
 
 std::string		Response::setDate(){

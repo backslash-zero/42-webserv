@@ -28,8 +28,10 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 		if (it->compare("index") == 0) {
 			while (it != ite && it->compare(";") != 0) {
 				it++;
-				if (it != ite && it->compare(";") != 0)
+				if (it != ite && it->compare(";") != 0){
 					lc.index.push_back(*it);
+					std::cout << "HERE " << *it << std::endl;
+				}
 			}
 		}
 		if (it->compare("autoindex") == 0) {
@@ -121,8 +123,9 @@ s_server_config	Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 		if (it->compare("index") == 0) {
 			while (it != ite && it->compare(";") != 0) {
 				it++;
-				if (it != ite && it->compare(";") != 0)
+				if (it != ite && it->compare(";") != 0){
 					sv.index.push_back(*it);
+				}
 			}
 		}
 		if (it->compare("autoindex") == 0) {

@@ -11,8 +11,9 @@ int		Response::isFile(std::string path){
 		else
 			return 0;
 	}
-	else
+	else {
 		return 0;
+	}
 }
 
 int		Response::readFile(std::string path){
@@ -37,8 +38,8 @@ void	Response::getMethod(){
 	if (false) { //check for cgi
 		// execute cgi
 	}
-	else if (readFile(_currentConf.root + _req.getPath())) {
-		setContentType(_req.getPath());
+	else if (readFile(_currentPath)) {
+		setContentType(_currentPath);
 		setupHeader();
 	}
 	return ;

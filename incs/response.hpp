@@ -15,6 +15,8 @@ class Response{
 		Request			_req; //store request
 		Server*			_serv; // server who received request
 		s_server_config _currentConf; // server's conf
+		s_location		_currentLoc; // location's config
+		std::string		_currentPath; // Parsed path
 		int				_ret; // error code
 
 		std::stringstream		_response; //response which will be send
