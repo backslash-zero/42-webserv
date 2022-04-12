@@ -49,4 +49,5 @@ class Response{
 
 		int		readFile(std::string path);
 		int		isFile(std::string path);
+		int		autoIndex(std::string path);
 };

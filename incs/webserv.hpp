@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <algorithm>
+#include <dirent.h>
 
 #include <iostream>
 #include <fstream>

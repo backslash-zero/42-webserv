@@ -30,7 +30,6 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 				it++;
 				if (it != ite && it->compare(";") != 0){
 					lc.index.push_back(*it);
-					std::cout << "HERE " << *it << std::endl;
 				}
 			}
 		}
@@ -38,7 +37,7 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 			it++;
 			if (it == ite || it->compare(";") == 0)
 				throw std::logic_error("argument not find");
-			lc.root = *it;
+			lc.autoindex = *it;
 		}
 		if (it->compare("methods") == 0) {
 			while (it != ite && it->compare(";") != 0) {
@@ -132,7 +131,7 @@ s_server_config	Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 			it++;
 			if (it == ite || it->compare(";") == 0)
 				throw std::logic_error("argument not find");
-			sv.root = *it;
+			sv.autoindex = *it;
 		}
 		it++;
 	}

@@ -99,8 +99,9 @@ void		Response::setupConf(){
 	for ( ; ite != _currentConf.location.end(); ite++){
 		if (ite->path == _req.getPath()) {
 			_currentLoc = *ite;
-			_currentPath = (_currentLoc.root.size() > 0 ? _currentLoc.root : _currentConf.root) + "/" +
+				_currentPath = (_currentLoc.root.size() > 0 ? _currentLoc.root : _currentConf.root) + "/" +
 							(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
+
 		}
 	}
 }
