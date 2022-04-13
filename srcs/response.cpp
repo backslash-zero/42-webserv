@@ -205,10 +205,10 @@ void			Response::setLocation(){ // find best match for location
 	_currentLoc = ret.second; // store loc
 	//reinterpret the path if an index.html is specified and there is no autoindex
 	if (_currentLoc.path == _req.getPath()) {
-			if (_currentConf.autoindex != "on" && _currentLoc.autoindex != "on"){
-				_currentPath = (_currentLoc.root.size() > 0 ? _currentLoc.root : _currentConf.root) + "/" +
-							(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
-			}
+		if ((_currentConf.autoindex != "on" && _currentLoc.autoindex != "on" )|| _currentLoc.autoindex == "off"){
+			_currentPath = (_currentLoc.root.size() > 0 ? _currentLoc.root : _currentConf.root) + "/" +
+						(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
+		}
 	}
 	std::cout << GREEN << "Coresponding location: " <<ret.second.path  << WHITE<< std::endl;
 }
