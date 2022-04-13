@@ -36,7 +36,7 @@ void		Response::setError(int ret){
 		_body << getHtmlFile(errPage->second);
 	}
 	else{ //default error page
-		_body << getHtmlFile("html/" + toString(_ret) + ".html");
+		_body << getHtmlFile("defaults/error_pages/" + toString(_ret) + ".html");
 	}
 	_headerTemplate["Content-Length"] = setContentLength();
 
@@ -96,8 +96,9 @@ void		Response::setupConf(){
 	if (it == _conf.end())
 		_currentConf = *_conf.begin();
 	_currentPath = _currentConf.root + _req.getPath();
-	std::vector<s_location>::iterator ite = _currentConf.location.begin();
-	for ( ; ite != _currentConf.location.end(); ite++){
+	//std::vector<s_location>::iterator ite = _currentConf.location.begin();
+	setLocation();
+	/*for ( ; ite != _currentConf.location.end(); ite++){
 		if (ite->path == _req.getPath()) {
 			_currentLoc = *ite;
 			if (_currentConf.autoindex != "on" && _currentLoc.autoindex != "on"){
@@ -106,7 +107,7 @@ void		Response::setupConf(){
 			}
 
 		}
-	}
+	}*/
 }
 
 std::string		Response::setDate(){
@@ -152,4 +153,62 @@ std::string		Response::getHtmlFile(const std::string& path)
 	buffer << file.rdbuf();
 	file.close();
 	return (buffer.str());
+}
+
+
+float		locationSim(std::string confLoc, std::string path){
+	int score = 0;
+
+	if (confLoc.size() > path.size()) // if conf location is longer than path
+		return -1;
+	if (confLoc == path) // exact same path
+		return 0;
+	if (confLoc[0] == '.') // not handle location
+		return -1;
+	
+	for (std::string::size_type i = 0; i < path.size(); i++) {
+		if (path[i] == confLoc[i]){
+			if (path[i] == '/')
+				score++;
+		}
+		else {
+			if (path[i] == '/')
+				score++;
+			else if (confLoc[i] != '\0')
+				score = -1;
+			return score;
+		}
+    }
+	return 0;
+}
+
+void			Response::setLocation(){ // find best match for location
+	std::pair<int, s_location >	ret;
+	int								sim;
+
+	ret.first = -1;
+	std::vector<s_location>::iterator ite = _currentConf.location.begin();
+	for ( ; ite != _currentConf.location.end(); ite++){
+		sim = locationSim(ite->path, _req.getPath()); // return a "score", -1 bad location, 0 exact location, +0 best match
+		if (ite->path[0] == '.' && //does path end with '.something', if true set location and wait if exact location exist
+			_req.getPath().compare(_req.getPath().size() - ite->path.size(), ite->path.size(), ite->path) == 0) {
+				ret.first = 1000;
+				ret.second = *ite;
+			}
+		if (sim > ret.first || sim == 0) { // store the best match, if 0 break
+			ret.first = sim;
+			ret.second = *ite;
+			if (sim == 0)
+				break;
+		}
+	}
+	_currentLoc = ret.second; // store loc
+	//reinterpret the path if an index.html is specified and there is no autoindex
+	if (_currentLoc.path == _req.getPath()) {
+			if (_currentConf.autoindex != "on" && _currentLoc.autoindex != "on"){
+				_currentPath = (_currentLoc.root.size() > 0 ? _currentLoc.root : _currentConf.root) + "/" +
+							(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
+			}
+	}
+	std::cout << GREEN << "Coresponding location: " <<ret.second.path  << WHITE<< std::endl;
 }
