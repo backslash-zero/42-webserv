@@ -49,5 +49,6 @@ class Response{
 
 		int		readFile(std::string path);
 		int		isFile(std::string path);
+		void	setLocation();
 		int		autoIndex(std::string path);
 };

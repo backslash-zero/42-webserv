@@ -19,7 +19,6 @@ int		Response::isFile(std::string path){
 int		Response::autoIndex(std::string path){
 	DIR *dir = opendir(path.c_str());
 	if (dir == NULL){
-		std::cout << "here" << path << std::endl;
 		setError(404);
 		return 0;
 	}
