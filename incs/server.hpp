@@ -10,6 +10,7 @@ struct s_location {
 	std::vector<std::string>			methods;
 	std::string							fastcgi_pass;
 	// std::map<std::string, std::string>	fastcgi_param;
+	std::vector<s_location>				location;
 };
 
 struct s_server_config {

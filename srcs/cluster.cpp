@@ -1,15 +1,18 @@
 
 #include "../incs/cluster.hpp"
 
-std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) {
+std::vector<s_location>		Cluster::_setupLocation(const std::vector<std::string> &loc) {
 	std::vector<s_location>	s_lc;
+	std::vector<s_location>	s_tmp;
 	s_location				lc;
 
-	std::vector<std::string>::iterator it = loc.begin();
-	std::vector<std::string>::iterator ite = loc.end();
+	std::vector<std::string>::const_iterator it = loc.begin();
+	std::vector<std::string>::const_iterator ite = loc.end();
+	bool first_loc = false;
 
 	while (it != ite) {
-		if (it->compare("location") == 0) {
+		if (it->compare("location") == 0 && !first_loc) {
+			first_loc = true;
 			it++;
 			if (it == ite || it->compare(";") == 0)
 				throw std::logic_error("argument not find");
@@ -18,6 +21,18 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 			if (it->compare("{") != 0)
 				throw std::logic_error("bracket is missing");
 			it--;
+		}
+		if (it->compare("location") == 0 && first_loc) {
+			std::vector<std::string>::const_iterator start = it;
+			int open = 1;
+			while (it != ite && open > 0) {
+				it++;
+				if (it != ite && it->compare("}") == 0)
+					open--;
+				else if (it != ite && it->compare("location") == 0)
+					open++;
+			}
+			lc.location = _setupLocation(std::vector<std::string>(start, ++it));
 		}
 		if (it->compare("root") == 0) {
 			it++;
@@ -58,6 +73,7 @@ std::vector<s_location>		Cluster::_setupLocation(std::vector<std::string> &loc) 
 			lc.index.clear();
 			lc.autoindex.clear();
 			lc.fastcgi_pass.clear();
+			lc.location.clear();
 			// lc.fastcgi_param.clear();
 		}
 		it++;
@@ -155,24 +171,20 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 				it--;
 				while (it != ite && it->compare("}") != 0) {
 					if (it->compare("location") == 0) {
-						// it++;
-						// if (it->compare("/") != 0)
-						// 	std::cout << "error location_match" << std::endl;
-						// else {
-						// 	it++;
-						// 	if (it->compare("{") != 0)
-						// 		throw std::logic_error("bracket is missing");
-						// 	it--;
-						// 	it--;
-							while (it != ite && it->compare("}") != 0) {
-								loc.push_back(*it);
-								vec.erase(it);
-							}
+						int open = 1;
+						// while (it != ite && it->compare("}") != 0) {
+						while (it != ite && open > 0) {
 							loc.push_back(*it);
 							vec.erase(it);
-							ite = vec.end();
-							continue ;
-						// }
+							if (it != ite && it->compare("}") == 0)
+								open--;
+							else if (it != ite && it->compare("location") == 0)
+								open++;
+						}
+						loc.push_back(*it);
+						vec.erase(it);
+						ite = vec.end();
+						continue ;
 					}
 					serv.push_back(*it);
 					vec.erase(it);
@@ -235,6 +247,42 @@ void	Cluster::printConfig(void) {
 					std::cout << "autoindex : " << i->autoindex << std::endl;
 				if (!i->fastcgi_pass.empty())
 					std::cout << "fastcgi_pass : " << i->fastcgi_pass << std::endl;
+				// if (!i->location.empty())
+				// 	std::cout << "location : " << i->location.begin()->path << std::endl;
+				for (std::vector<s_location>::iterator k = i->location.begin(); k != i->location.end(); k++) {
+					std::cout << "[location] of location" << std::endl;
+					if (!k->path.empty()) {
+						std::cout << "path : " << k->path << std::endl;
+					}
+					if (!k->root.empty()) {
+						std::cout << "root : " << k->root << std::endl;
+					}
+					if (!k->index.empty()) {
+						for (std::list<std::string>::iterator j = k->index.begin(); j != k->index.end(); j++)
+							std::cout << "index : " << *j << std::endl;
+					}
+					if (!k->autoindex.empty())
+						std::cout << "autoindex : " << k->autoindex << std::endl;
+					if (!k->fastcgi_pass.empty())
+						std::cout << "fastcgi_pass : " << k->fastcgi_pass << std::endl;
+					for (std::vector<s_location>::iterator k2 = k->location.begin(); k2 != k->location.end(); k2++) {
+						std::cout << "[location] of location bis" << std::endl;
+						if (!k2->path.empty()) {
+							std::cout << "path : " << k2->path << std::endl;
+						}
+						if (!k2->root.empty()) {
+							std::cout << "root : " << k2->root << std::endl;
+						}
+						if (!k2->index.empty()) {
+							for (std::list<std::string>::iterator j = k2->index.begin(); j != k2->index.end(); j++)
+								std::cout << "index : " << *j << std::endl;
+						}
+						if (!k2->autoindex.empty())
+							std::cout << "autoindex : " << k2->autoindex << std::endl;
+						if (!k2->fastcgi_pass.empty())
+							std::cout << "fastcgi_pass : " << k2->fastcgi_pass << std::endl;
+					}
+				}
 			}
 		}
 	}

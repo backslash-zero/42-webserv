@@ -25,7 +25,7 @@ class Cluster {
 
 	int								_max_sk;
 	fd_set							_msfd; //master fd, handling incoming connection
-	std::vector<s_location>			_setupLocation(std::vector<std::string> &loc);
+	std::vector<s_location>			_setupLocation(const std::vector<std::string> &loc);
 	s_server_config					_setupServer(std::vector<std::string> &serv, std::vector<std::string> &loc);
 	void							_clearLocation(s_location lc);
 	t_conf							_getListen();
