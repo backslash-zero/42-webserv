@@ -1,9 +1,64 @@
 
 #include "../incs/cluster.hpp"
 
+static s_location		_setupLocationBis(const std::vector<std::string> &loc) {
+	s_location				lc;
+
+	std::vector<std::string>::const_iterator it = loc.begin();
+	std::vector<std::string>::const_iterator ite = loc.end();
+
+	while (it != ite) {
+		std::cout << "it : " << *it << std::endl;
+		if (it->compare("location") == 0) {
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			lc.path = *it;
+			it++;
+			if (it->compare("{") != 0)
+				throw std::logic_error("bracket is missing");
+			it--;
+		}
+		if (it->compare("root") == 0) {
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			lc.root = *it;
+		}
+		if (it->compare("index") == 0) {
+			while (it != ite && it->compare(";") != 0) {
+				it++;
+				if (it != ite && it->compare(";") != 0){
+					lc.index.push_back(*it);
+				}
+			}
+		}
+		if (it->compare("autoindex") == 0) {
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			lc.autoindex = *it;
+		}
+		if (it->compare("methods") == 0) {
+			while (it != ite && it->compare(";") != 0) {
+				it++;
+				if (it != ite && it->compare(";") != 0)
+					lc.methods.push_back(*it);
+			}
+		}
+		if (it->compare("fastcgi_pass") == 0) {
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			lc.fastcgi_pass = *it;
+		}
+		it++;
+	}
+	return lc;
+}
+
 std::vector<s_location>		Cluster::_setupLocation(const std::vector<std::string> &loc) {
 	std::vector<s_location>	s_lc;
-	std::vector<s_location>	s_tmp;
 	s_location				lc;
 
 	std::vector<std::string>::const_iterator it = loc.begin();
@@ -11,6 +66,7 @@ std::vector<s_location>		Cluster::_setupLocation(const std::vector<std::string> 
 	bool first_loc = false;
 
 	while (it != ite) {
+		std::cout << "-->it : " << *it << std::endl;
 		if (it->compare("location") == 0 && !first_loc) {
 			first_loc = true;
 			it++;
@@ -23,6 +79,7 @@ std::vector<s_location>		Cluster::_setupLocation(const std::vector<std::string> 
 			it--;
 		}
 		if (it->compare("location") == 0 && first_loc) {
+			std::cout << "location into loc" << std::endl;
 			std::vector<std::string>::const_iterator start = it;
 			int open = 1;
 			while (it != ite && open > 0) {
@@ -32,7 +89,8 @@ std::vector<s_location>		Cluster::_setupLocation(const std::vector<std::string> 
 				else if (it != ite && it->compare("location") == 0)
 					open++;
 			}
-			lc.location = _setupLocation(std::vector<std::string>(start, ++it));
+			lc.location.push_back(_setupLocationBis(std::vector<std::string>(start, ++it)));
+			continue ;
 		}
 		if (it->compare("root") == 0) {
 			it++;
@@ -68,12 +126,14 @@ std::vector<s_location>		Cluster::_setupLocation(const std::vector<std::string> 
 			lc.fastcgi_pass = *it;
 		}
 		if (it->compare("}") == 0) {
+			std::cout << "loc closed" << std::endl;
 			s_lc.push_back(lc);
 			lc.root.clear();
 			lc.index.clear();
 			lc.autoindex.clear();
 			lc.fastcgi_pass.clear();
 			lc.location.clear();
+			first_loc = false;
 			// lc.fastcgi_param.clear();
 		}
 		it++;
@@ -173,7 +233,9 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 					if (it->compare("location") == 0) {
 						int open = 1;
 						// while (it != ite && it->compare("}") != 0) {
+						std::cout << "new LOC" << std::endl;
 						while (it != ite && open > 0) {
+							// std::cout << "it : " << *it << " open : " << open << std::endl;
 							loc.push_back(*it);
 							vec.erase(it);
 							if (it != ite && it->compare("}") == 0)
@@ -191,6 +253,10 @@ void	Cluster::exploitTokens(std::vector<std::string> &tokens) {
 				}
 				serv.push_back(*it);
 				vec.erase(it);
+				// std::cout << "print LOC" << std::endl;
+				// for (std::vector<std::string>::iterator it = loc.begin(); it != loc.end(); it++) {
+				// 	std::cout << "it : " << *it << std::endl;
+				// }
 				_serverConf.push_back(_setupServer(serv, loc));
 				serv.clear();
 				loc.clear();
