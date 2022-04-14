@@ -35,7 +35,7 @@ void		Request::parseHeading(const std::string& str){
 		return setErrorCode(400, "No space after method.\n");
 	_method.assign(str, 0, j);
 	if (std::find(avMethods.begin(), avMethods.end(), _method) == avMethods.end()) //get method
-		return setErrorCode(405, "Method not allowed.\n");;
+		return setErrorCode(405, "Method not allowed.\n");
 	i = str.find_first_not_of(' ', j); //get begin of path
 	j = str.find_first_of(' ', i);//get end of path
 	if (i == std::string::npos || j == std::string::npos || str[i] != '/')//check if valid pos

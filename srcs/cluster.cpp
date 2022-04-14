@@ -133,6 +133,7 @@ std::vector<s_location>		Cluster::_setupLocation(const std::vector<std::string> 
 			lc.autoindex.clear();
 			lc.fastcgi_pass.clear();
 			lc.location.clear();
+			lc.methods.clear();
 			first_loc = false;
 			// lc.fastcgi_param.clear();
 		}

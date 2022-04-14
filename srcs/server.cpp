@@ -35,13 +35,7 @@ int Server::setup()
 		close(_sockfd);
 		return -1;
 	};
-	std::cout << GREEN << "Server listenning on port " << _port << std::endl;
-	std::cout << "Virtual server :" << std::endl;
-	std::vector<s_server_config>::iterator b;
-	for (b = _conf.begin(); b != _conf.end(); b++){
-		std::cout << b->server_name.front() << std::endl;
-	}
-	std::cout << WHITE << std::endl;
+	std::cout << GREEN << "Server listenning on port " << _port << WHITE<< std::endl;
 	return 0;
 }
 

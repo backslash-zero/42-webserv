@@ -33,7 +33,6 @@ int		Response::autoIndex(std::string path){
 
 int		Response::readFile(std::string path){
 	std::ifstream file;
-	std::cout << path << std::endl;
 	if (isFile(path)){ // file exist
 		file.open(path.c_str());
 		_body << file.rdbuf();

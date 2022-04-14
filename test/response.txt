@@ -10,18 +10,175 @@ Accept-Language: fr-CH, fr;q=0.9,en-US,en;q=0.5
 // Received //
 HTTP/1.1 405 Method Not Allowed
 Connection: Close
-Content-Length: 166
+Content-Length: 5934
 Content-Type: text/html
 
+<!DOCTYPE html>
 <html>
-	<head><title>405</title></head>
-		<body bgcolor="white">
-			<center><h1>405 Method Not Allowed</h1></center>
-		<hr><center>WebServer</center>
-	</body>
-</html>
+  <title>405 Method Not Allowed</title>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body {
+        background-image: linear-gradient(60deg, #221e29 0%, #110f14 100%);
+        width: 100vw;
+        height: 100vh;
+        font-size: 16px;
+        transition-duration: 0.4s;
+        margin: 0;
+      }
 
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
 
+      .text-holder {
+        margin: 0;
+        position: absolute;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-left: 40px;
+      }
+
+      .subtitle,
+      .info-text {
+        display: block;
+        width: 50vw;
+        line-height: normal;
+      }
+
+      .subtitle {
+        margin: 0;
+        margin-bottom: 24px;
+        height: 80;
+        font-size: 80px;
+      }
+
+      .info-text {
+        opacity: 0.5;
+        margin: 0;
+        font-size: 40px;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
+      a {
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        transition-duration: 0.4s;
+      }
+
+      .holder {
+        margin: 0;
+        position: absolute;
+        height: 100vh;
+      }
+
+      .last-text-holder {
+        position: absolute;
+        margin: 0;
+        bottom: 16px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .last-text-container {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .link {
+        width: 8px;
+        height: 0px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .square {
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle-button {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0);
+      }
+      .rectangle-button:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .svg-item {
+        display: block;
+        margin: auto;
+      }
+      #sin-wave {
+        opacity: 0.4;
+        -webkit-animation: slide-right 1s linear infinite both;
+        animation: slide-right 1s linear infinite both;
+      }
+      @-webkit-keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+      @keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="holder">
+      <div class="text-holder">
+        <h2 class="subtitle">405 Method Not Allowed</h2>
+        <p class="info-text">
+          The 405 (Method Not Allowed) status code indicates that the method
+          received in the request-line is known by the origin server but not
+          supported
 		//////////
 // Sended //
  / HTTP/1.1
@@ -35,18 +192,175 @@ Accept-Language: fr-CH, fr;q=0.9,en-US,en;q=0.5
 // Received //
 HTTP/1.1 405 Method Not Allowed
 Connection: Close
-Content-Length: 166
+Content-Length: 5934
 Content-Type: text/html
 
+<!DOCTYPE html>
 <html>
-	<head><title>405</title></head>
-		<body bgcolor="white">
-			<center><h1>405 Method Not Allowed</h1></center>
-		<hr><center>WebServer</center>
-	</body>
-</html>
+  <title>405 Method Not Allowed</title>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body {
+        background-image: linear-gradient(60deg, #221e29 0%, #110f14 100%);
+        width: 100vw;
+        height: 100vh;
+        font-size: 16px;
+        transition-duration: 0.4s;
+        margin: 0;
+      }
 
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
 
+      .text-holder {
+        margin: 0;
+        position: absolute;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-left: 40px;
+      }
+
+      .subtitle,
+      .info-text {
+        display: block;
+        width: 50vw;
+        line-height: normal;
+      }
+
+      .subtitle {
+        margin: 0;
+        margin-bottom: 24px;
+        height: 80;
+        font-size: 80px;
+      }
+
+      .info-text {
+        opacity: 0.5;
+        margin: 0;
+        font-size: 40px;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
+      a {
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        transition-duration: 0.4s;
+      }
+
+      .holder {
+        margin: 0;
+        position: absolute;
+        height: 100vh;
+      }
+
+      .last-text-holder {
+        position: absolute;
+        margin: 0;
+        bottom: 16px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .last-text-container {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .link {
+        width: 8px;
+        height: 0px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .square {
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle-button {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0);
+      }
+      .rectangle-button:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .svg-item {
+        display: block;
+        margin: auto;
+      }
+      #sin-wave {
+        opacity: 0.4;
+        -webkit-animation: slide-right 1s linear infinite both;
+        animation: slide-right 1s linear infinite both;
+      }
+      @-webkit-keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+      @keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="holder">
+      <div class="text-holder">
+        <h2 class="subtitle">405 Method Not Allowed</h2>
+        <p class="info-text">
+          The 405 (Method Not Allowed) status code indicates that the method
+          received in the request-line is known by the origin server but not
+          supported
 		//////////
 // Sended //
 GET HTTP/1.1
@@ -58,20 +372,177 @@ Accept-Language: fr-CH, fr;q=0.9,en-US,en;q=0.5
 
 
 // Received //
-HTTP/1.1 400 Bad Request
+HTTP/1.1 413 Request Entity Too Large
 Connection: Close
-Content-Length: 159
+Content-Length: 5948
 Content-Type: text/html
 
+<!DOCTYPE html>
 <html>
-	<head><title>400</title></head>
-		<body bgcolor="white">
-			<center><h1>400 Bad Request</h1></center>
-		<hr><center>WebServer</center>
-	</body>
-</html>
+  <title>413 Payload Too Large</title>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body {
+        background-image: linear-gradient(60deg, #221e29 0%, #110f14 100%);
+        width: 100vw;
+        height: 100vh;
+        font-size: 16px;
+        transition-duration: 0.4s;
+        margin: 0;
+      }
 
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
 
+      .text-holder {
+        margin: 0;
+        position: absolute;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-left: 40px;
+      }
+
+      .subtitle,
+      .info-text {
+        display: block;
+        width: 50vw;
+        line-height: normal;
+      }
+
+      .subtitle {
+        margin: 0;
+        margin-bottom: 24px;
+        height: 80;
+        font-size: 80px;
+      }
+
+      .info-text {
+        opacity: 0.5;
+        margin: 0;
+        font-size: 40px;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
+      a {
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        transition-duration: 0.4s;
+      }
+
+      .holder {
+        margin: 0;
+        position: absolute;
+        height: 100vh;
+      }
+
+      .last-text-holder {
+        position: absolute;
+        margin: 0;
+        bottom: 16px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .last-text-container {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .link {
+        width: 8px;
+        height: 0px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .square {
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle-button {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0);
+      }
+      .rectangle-button:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .svg-item {
+        display: block;
+        margin: auto;
+      }
+      #sin-wave {
+        opacity: 0.4;
+        -webkit-animation: slide-right 1s linear infinite both;
+        animation: slide-right 1s linear infinite both;
+      }
+      @-webkit-keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+      @keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="holder">
+      <div class="text-holder">
+        <h2 class="subtitle">413 Payload Too Large</h2>
+        <p class="info-text">
+          The 413 (Payload Too Large) status code indicates that the server is
+          refusing to process a request because the request payload is larger
+          th
 		//////////
 // Sended //
 GET / HTTP/1.9999
@@ -83,20 +554,177 @@ Accept-Language: fr-CH, fr;q=0.9,en-US,en;q=0.5
 
 
 // Received //
-HTTP/1.1 400 Bad Request
+HTTP/1.1 413 Request Entity Too Large
 Connection: Close
-Content-Length: 159
+Content-Length: 5948
 Content-Type: text/html
 
+<!DOCTYPE html>
 <html>
-	<head><title>400</title></head>
-		<body bgcolor="white">
-			<center><h1>400 Bad Request</h1></center>
-		<hr><center>WebServer</center>
-	</body>
-</html>
+  <title>413 Payload Too Large</title>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body {
+        background-image: linear-gradient(60deg, #221e29 0%, #110f14 100%);
+        width: 100vw;
+        height: 100vh;
+        font-size: 16px;
+        transition-duration: 0.4s;
+        margin: 0;
+      }
 
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
 
+      .text-holder {
+        margin: 0;
+        position: absolute;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-left: 40px;
+      }
+
+      .subtitle,
+      .info-text {
+        display: block;
+        width: 50vw;
+        line-height: normal;
+      }
+
+      .subtitle {
+        margin: 0;
+        margin-bottom: 24px;
+        height: 80;
+        font-size: 80px;
+      }
+
+      .info-text {
+        opacity: 0.5;
+        margin: 0;
+        font-size: 40px;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
+      a {
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        transition-duration: 0.4s;
+      }
+
+      .holder {
+        margin: 0;
+        position: absolute;
+        height: 100vh;
+      }
+
+      .last-text-holder {
+        position: absolute;
+        margin: 0;
+        bottom: 16px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .last-text-container {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .link {
+        width: 8px;
+        height: 0px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .square {
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle-button {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0);
+      }
+      .rectangle-button:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .svg-item {
+        display: block;
+        margin: auto;
+      }
+      #sin-wave {
+        opacity: 0.4;
+        -webkit-animation: slide-right 1s linear infinite both;
+        animation: slide-right 1s linear infinite both;
+      }
+      @-webkit-keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+      @keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="holder">
+      <div class="text-holder">
+        <h2 class="subtitle">413 Payload Too Large</h2>
+        <p class="info-text">
+          The 413 (Payload Too Large) status code indicates that the server is
+          refusing to process a request because the request payload is larger
+          th
 		//////////
 // Sended //
 GET / HTTP/1.1 test
@@ -108,20 +736,177 @@ Accept-Language: fr-CH, fr;q=0.9,en-US,en;q=0.5
 
 
 // Received //
-HTTP/1.1 400 Bad Request
+HTTP/1.1 413 Request Entity Too Large
 Connection: Close
-Content-Length: 159
+Content-Length: 5948
 Content-Type: text/html
 
+<!DOCTYPE html>
 <html>
-	<head><title>400</title></head>
-		<body bgcolor="white">
-			<center><h1>400 Bad Request</h1></center>
-		<hr><center>WebServer</center>
-	</body>
-</html>
+  <title>413 Payload Too Large</title>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body {
+        background-image: linear-gradient(60deg, #221e29 0%, #110f14 100%);
+        width: 100vw;
+        height: 100vh;
+        font-size: 16px;
+        transition-duration: 0.4s;
+        margin: 0;
+      }
 
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
 
+      .text-holder {
+        margin: 0;
+        position: absolute;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-left: 40px;
+      }
+
+      .subtitle,
+      .info-text {
+        display: block;
+        width: 50vw;
+        line-height: normal;
+      }
+
+      .subtitle {
+        margin: 0;
+        margin-bottom: 24px;
+        height: 80;
+        font-size: 80px;
+      }
+
+      .info-text {
+        opacity: 0.5;
+        margin: 0;
+        font-size: 40px;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
+      a {
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        transition-duration: 0.4s;
+      }
+
+      .holder {
+        margin: 0;
+        position: absolute;
+        height: 100vh;
+      }
+
+      .last-text-holder {
+        position: absolute;
+        margin: 0;
+        bottom: 16px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .last-text-container {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .link {
+        width: 8px;
+        height: 0px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .square {
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle-button {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0);
+      }
+      .rectangle-button:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .svg-item {
+        display: block;
+        margin: auto;
+      }
+      #sin-wave {
+        opacity: 0.4;
+        -webkit-animation: slide-right 1s linear infinite both;
+        animation: slide-right 1s linear infinite both;
+      }
+      @-webkit-keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+      @keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="holder">
+      <div class="text-holder">
+        <h2 class="subtitle">413 Payload Too Large</h2>
+        <p class="info-text">
+          The 413 (Payload Too Large) status code indicates that the server is
+          refusing to process a request because the request payload is larger
+          th
 		//////////
 // Sended //
 GET / HTTP/1.1
@@ -134,18 +919,192 @@ Accept-Language: fr-CH, fr;q=0.9,en-US,en;q=0.5
 
 // Received //
 HTTP/1.1 200 Ok
-Connection: Keep-Alive
-Content-Length: 152
-Date: Tue, 12 Apr 2022 14:13:49 GMT
-Server: webserv/1.0.0 (Unix)
 
+
+
+
+		//////////
+// Sended //
+PUT /put HTTP/1.1
+Host: webserv
+Connection: keep-alive
+User-Agent: custom-client
+Accept-Language: fr-CH, fr;q=0.9,en-US,en;q=0.5
+
+fudsbfhbsdjhfbsdjfbsdjfbsdjhbfjhsdbfhjsdbfjhsdbfjhdsbfjshdf
+
+
+
+// Received //
+HTTP/1.1 413 Request Entity Too Large
+Connection: Close
+Content-Length: 5948
+Content-Type: text/html
+
+<!DOCTYPE html>
 <html>
-	<head><title>Index</title></head>
-		<body bgcolor="white">
-			<center><h1>Coucou</h1></center>
-		<hr><center>WebServer</center>
-	</body>
-</html>
+  <title>413 Payload Too Large</title>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body {
+        background-image: linear-gradient(60deg, #221e29 0%, #110f14 100%);
+        width: 100vw;
+        height: 100vh;
+        font-size: 16px;
+        transition-duration: 0.4s;
+        margin: 0;
+      }
 
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
 
+      .text-holder {
+        margin: 0;
+        position: absolute;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-left: 40px;
+      }
+
+      .subtitle,
+      .info-text {
+        display: block;
+        width: 50vw;
+        line-height: normal;
+      }
+
+      .subtitle {
+        margin: 0;
+        margin-bottom: 24px;
+        height: 80;
+        font-size: 80px;
+      }
+
+      .info-text {
+        opacity: 0.5;
+        margin: 0;
+        font-size: 40px;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Karla", sans-serif;
+      }
+      a {
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        transition-duration: 0.4s;
+      }
+
+      .holder {
+        margin: 0;
+        position: absolute;
+        height: 100vh;
+      }
+
+      .last-text-holder {
+        position: absolute;
+        margin: 0;
+        bottom: 16px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .last-text-container {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .link {
+        width: 8px;
+        height: 0px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .square {
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rectangle-button {
+        padding: 0px 16px 0px 16px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0);
+      }
+      .rectangle-button:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .svg-item {
+        display: block;
+        margin: auto;
+      }
+      #sin-wave {
+        opacity: 0.4;
+        -webkit-animation: slide-right 1s linear infinite both;
+        animation: slide-right 1s linear infinite both;
+      }
+      @-webkit-keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+      @keyframes slide-right {
+        0% {
+          -webkit-transform: translateX(-45px);
+          transform: translateX(-45px);
+        }
+        100% {
+          -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="holder">
+      <div class="text-holder">
+        <h2 class="subtitle">413 Payload Too Large</h2>
+        <p class="info-text">
+          The 413 (Payload Too Large) status code indicates that the server is
+          refusing to process a request because the request payload is larger
+          th
 		//////////

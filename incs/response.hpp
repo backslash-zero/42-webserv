@@ -40,7 +40,6 @@ class Response{
 		void	getMethod();
 
 		std::string		setConnection();
-		std::string		setServer();
 		std::string		setDate();
 		std::string		setContentLength();
 		std::string		setContentType(std::string path);
@@ -51,4 +50,5 @@ class Response{
 		int		isFile(std::string path);
 		void	setLocation();
 		int		autoIndex(std::string path);
+		void	isValidRequest();
 };
