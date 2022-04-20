@@ -410,6 +410,8 @@ bool		Cluster::launch(){
 			default: //change happened
 			{
 				// select() changes the fd_set : it now contains ONLY the ones ready for reading.
+				// we then need to check each fd in the set to see if it's a new connection.
+
 				for (std::map<int, Server *>::iterator it = _clients.begin(); it != _clients.end(); it++){ //iterate on connected clients
 					if (FD_ISSET(it->first, &rfds)){ // search the client who send us smth
 						int client_fd = it->first;
@@ -430,7 +432,7 @@ bool		Cluster::launch(){
 					if (FD_ISSET(it->second->getSocket(), &rfds)){ // search for the server who send us smth
 						int connection = it->second->accept(); // accept incomming connection
 						if (connection != -1){
-							std::cout << GREEN << "\nClient connected at port : " << it->second->getPort() << WHITE<< std::endl;
+							std::cout << GREEN << "\nClient connected at port : " << BOLDWHITE << it->second->getPort() << RESET << std::endl;
 							FD_SET(connection, &(this->_msfd)); // root client socket (connection) to master fd
 							_clients.insert(std::make_pair(connection, it->second)); // add client to connected client (_clients)
 							if (connection > _max_sk)
