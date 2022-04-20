@@ -356,39 +356,44 @@ void	Cluster::printConfig(void) {
 }
 
 bool		Cluster::initCluster(){
-	_config = _getListen();
-	t_conf::iterator it = _config.begin();
-	t_conf::iterator ite = _config.end();
+	this->_config = _getListen();
+	this->t_conf::iterator it = this->_config.begin();
+	this->t_conf::iterator ite = _this->config.end();
 	for ( ; it != ite; it++) {
+
 		// for each port we instatiate server
 		int port = it->first;
-		_servers.insert(std::make_pair(port, new Server(port, it->second)));
+		this->_servers.insert(std::make_pair(port, new Server(port, it->second)));
 		long		fd = 0;
-		if (_servers[port]->setup() != -1)
+		if (this->_servers[port]->setup() != -1)
 		{
-			fd = _servers[port]->getSocket();
-			FD_SET(fd, &_msfd); // bind socket (fd) to master fd (_msfd) see select doc.
+			fd = this->_servers[port]->getSocket();
+			FD_SET(fd, &(this->_msfd)); // bind socket (fd) to master fd (_msfd) see select doc.
 			if (fd > _max_sk)
-				_max_sk = fd;
+				this->_max_sk = fd;
 		}
 		else {
-			_servers.erase(port); // if failed setup, remove from server list
+			this->_servers.erase(port); // if failed setup, remove from server list
 		}
 	}
 	return true;
 }
 
 bool		Cluster::launch(){
-	struct timeval tv;
+
+	struct timeval tv; // timevalue is only used for select's last parameter: timeout value.
 	int recVal = 0;
 	tv.tv_sec = 1;
 	while(true)
 	{
+		// We're making a copy because select() modifies the master fd set(_msfd).
 		fd_set rfds;
-
 		FD_ZERO(&rfds);
-		memcpy(&rfds, &_msfd, sizeof(_msfd));
-		std::cout << "\rWaiting for client" << std::flush;
+		memcpy(&rfds, &(this->_msfd), sizeof(this->_msfd));
+
+		// std::flush outputs cout to the console.
+		std::cout << "\rWaiting for client" << std::flush; 
+
 		recVal = select(_max_sk + 1, &rfds, NULL, NULL, &tv); // wait for change on rfds
 		switch(recVal)
 		{
@@ -402,8 +407,9 @@ bool		Cluster::launch(){
 					close(it->second->getSocket());
 				return false;
 			}
-			default: //change append
+			default: //change happened
 			{
+				// select() changes the fd_set : it now contains ONLY the ones ready for reading.
 				for (std::map<int, Server *>::iterator it = _clients.begin(); it != _clients.end(); it++){ //iterate on connected clients
 					if (FD_ISSET(it->first, &rfds)){ // search the client who send us smth
 						int client_fd = it->first;
@@ -412,7 +418,7 @@ bool		Cluster::launch(){
 							std::cout << RED << "\nConnection "<< client_fd<< " closed." << WHITE << std::endl;
 							close(it->first);
 							FD_CLR(it->first, &rfds);
-							FD_CLR(it->first, &_msfd);
+							FD_CLR(it->first, &(this->_msfd));
 							_clients.erase(it->first);
 							it = _clients.begin();
 						}
@@ -425,7 +431,7 @@ bool		Cluster::launch(){
 						int connection = it->second->accept(); // accept incomming connection
 						if (connection != -1){
 							std::cout << GREEN << "\nClient connected at port : " << it->second->getPort() << WHITE<< std::endl;
-							FD_SET(connection, &_msfd); // root client socket (connection) to master fd
+							FD_SET(connection, &(this->_msfd)); // root client socket (connection) to master fd
 							_clients.insert(std::make_pair(connection, it->second)); // add client to connected client (_clients)
 							if (connection > _max_sk)
 								_max_sk = connection;
@@ -448,6 +454,7 @@ Cluster::t_conf Cluster::_getListen()
 		get all port that we need to listen to
 		create map of port & vector of server
 	*/
+	
 	t_conf res;
 	std::vector<s_server_config>::iterator it = _serverConf.begin();
 	std::vector<s_server_config>::iterator ite = _serverConf.end();
