@@ -4,7 +4,7 @@
 #include "../incs/response.hpp"
 #include "../incs/cluster.hpp"
 
-Server::Server(int port, std::vector<s_server_config> conf):_port(port), _conf(conf){
+Server::Server(int port, std::vector<s_server_config> conf) : _port(port), _conf(conf){
 }
 
 int Server::setup()

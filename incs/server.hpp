@@ -44,9 +44,9 @@ class Server{
 
 	private:
 
-		int							_port;
-		int							_sockfd;
-		sockaddr_in					sockaddr;
-		std::map<int, std::string>	_requests; // stores requests.
-		std::vector<s_server_config> _conf; //conf of server/host
+		int								_port;
+		int								_sockfd;
+		sockaddr_in						sockaddr;
+		std::map<int, std::string>		_requests;	// stores requests.
+		std::vector<s_server_config>	_conf;		//conf of server/host
 };
