@@ -365,7 +365,7 @@ bool		Cluster::initCluster(){
 		int port = it->first;
 		this->_servers.insert(std::make_pair(port, new Server(port, it->second)));
 		long		fd = 0;
-		if (this->_servers[port]->setup() != -1)
+		if (this->_servers[port]->setup() != -1) // Create socket and binds it to server and starts listening for connection
 		{
 			fd = this->_servers[port]->getSocket();
 			FD_SET(fd, &(this->_msfd)); // bind socket (fd) to master fd (_msfd) see select doc.
