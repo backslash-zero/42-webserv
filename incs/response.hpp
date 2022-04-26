@@ -58,7 +58,4 @@ class Response{
 	int		autoIndex(std::string path);
 	void	isValidRequest(void);
 
-	int		read_fd[2];
-	int		write_fd[2];
-
 };
