@@ -52,7 +52,7 @@ int		Response::readFile(std::string path){
 	return 1;
 }
 
-void	Response::getMethod(void) {
+void	Response::methodGet(void) {
 	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
 		// execute cgi
 	}
@@ -63,7 +63,7 @@ void	Response::getMethod(void) {
 	return ;
 }
 
-void	Response::deleteMethod(void){
+void	Response::methodDelete(void){
 	if (_currentPath.find("..")) {
 		setError(403);
 		setupHeader();
@@ -82,7 +82,7 @@ void	Response::deleteMethod(void){
 }
 
 void	Response::exec_child(pid_t pid, cgi *cgi, std::string exec) {
-	std::cout << "exec child" << std::endl;
+	std::cout << "\n[exec child]" << std::endl;
 	char *argv[3];
 	argv[0] = strdup(exec.c_str());
 	argv[1] = strdup(cgi->_env[cgi::SCRIPT_FILENAME].c_str());
@@ -122,7 +122,7 @@ void	Response::exec_child(pid_t pid, cgi *cgi, std::string exec) {
 	free(argv[1]);
 }
 
-void	Response::postMethod(void) {
+void	Response::methodePost(void) {
 	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
 		cgi		cgi;
 		pid_t	pid;

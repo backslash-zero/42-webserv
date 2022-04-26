@@ -41,9 +41,9 @@ class Response{
 
 	void	writeResp(void); // write error & body
 
-	void	getMethod(void);
-	void	deleteMethod(void);
-	void	postMethod(void);
+	void	methodGet(void);
+	void	methodDelete(void);
+	void	methodPost(void);
 
 	void	exec_child(pid_t pid, cgi *cgi, std::string exec);
 
