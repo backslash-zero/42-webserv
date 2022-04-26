@@ -1,16 +1,18 @@
 #include "../incs/cgi.hpp"
 
-cgi::cgi(void) {
+cgi::cgi() {
 	_env.clear();
-	_env.push_back("SERVER_SOFTWARE=nginx/1.21.5");
 	_env.push_back("SERVER_NAME=webserv");
-	_env.push_back("GATEWAY_INTERFACE=CGI/1.1");
+	_env.push_back("SERVER_SOFTWARE=nginx/1.21.5");
 	_env.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	_env.push_back("SERVER_PORT=8080");
+	_env.push_back("GATEWAY_INTERFACE=CGI/1.1");
+
 	_env.push_back("REQUEST_METHOD=GET");
-	_env.push_back("PATH_INFO=/");
+	_env.push_back("PATH_INFO=/lol.bla");
 	_env.push_back("PATH_TRANSLATED=");
-	_env.push_back("SCRIPT_NAME=");
+	_env.push_back("SCRIPT_NAME=./test/ubuntu_cgi_tester");
+	_env.push_back("SCRIPT_FILENAME=./test/ubuntu_cgi_tester");
 	_env.push_back("QUERY_STRING=");
 	_env.push_back("REMOTE_HOST=");
 	_env.push_back("REMOTE_ADDR=");
@@ -26,7 +28,6 @@ cgi::cgi(void) {
 	_env.push_back("HTTP_REFERER=");
 	// security of php-cgi redirect status 200
 	_env.push_back("REDIRECT_STATUS=200");
-	_env.push_back("SCRIPT_FILENAME=");
 	// tmp dir where the files will be uploaded
 	_env.push_back("TMP_DIR=");
 	_envTab[NB_CGI_VAR] = 0;

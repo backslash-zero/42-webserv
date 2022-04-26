@@ -108,6 +108,16 @@ void	Response::exec_child(pid_t pid, cgi *cgi, std::string exec) {
 		close(read_fd[1]);
 		kill(pid, SIGTERM);
 	}
+	std::cout << "HERE" << std::endl;
+	char	buffer[100] = {0};
+	ret = 1;
+	while (ret > 0)
+	{
+		memset(buffer, 0, 100);
+		ret = read(write_fd[0], buffer, 100 - 1);
+		std::cout << buffer << std::endl;
+	}
+	std::cout << read_fd[1] << std::endl;
 	free(argv[0]);
 	free(argv[1]);
 }

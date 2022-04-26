@@ -37,7 +37,7 @@ class cgi {
 		NB_CGI_VAR,
 	};
 	
-	cgi(void);
+	cgi();
 
 	void	convertToC(void);
 
