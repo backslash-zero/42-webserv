@@ -16,7 +16,7 @@ int launch_cluster(char *conf_file)
 		cluster.launch();
 	}
 	catch(const std::exception& e) {
-		std::cerr << e.what() << '\n';
+		std::cerr << e.what() << std::endl;
 	}
 	// // Parsing .conf
 	// try
