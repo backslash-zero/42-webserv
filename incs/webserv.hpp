@@ -29,3 +29,6 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <fcntl.h>
+
+# define R_BUFFER_SIZE 10000
+# define CGI_BIN "./cgi/ubuntu_cgi_tester"

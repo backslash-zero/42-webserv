@@ -2,9 +2,9 @@
 
 template<class T>
 std::string toString(const T &value) {
-    std::ostringstream os;
-    os << value;
-    return os.str();
+	std::ostringstream os;
+	os << value;
+	return os.str();
 }
 
 Response::Response(Request &request, Server *server):_req(request), _serv(server){
@@ -162,13 +162,13 @@ float		locationSim(std::string confLoc, std::string path){
 				score = -1;
 			return score;
 		}
-    }
+	}
 	return 0;
 }
 
 void			Response::setLocation(){ // find best match for location
 	std::pair<int, s_location >	ret;
-	int								sim;
+	int							sim;
 
 	ret.first = -1;
 	std::vector<s_location>::iterator ite = _currentConf.location.begin();
