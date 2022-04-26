@@ -8,8 +8,8 @@ cgi::cgi() {
 	_env.push_back("SERVER_PORT=8080");
 	_env.push_back("GATEWAY_INTERFACE=CGI/1.1");
 
-	_env.push_back("REQUEST_METHOD=GET");
-	_env.push_back("PATH_INFO=/lol.bla");
+	_env.push_back("REQUEST_METHOD=POST");
+	_env.push_back("PATH_INFO=/index.html");
 	_env.push_back("PATH_TRANSLATED=");
 	_env.push_back("SCRIPT_NAME=./test/ubuntu_cgi_tester");
 	_env.push_back("SCRIPT_FILENAME=./test/ubuntu_cgi_tester");
@@ -41,4 +41,45 @@ void	cgi::convertToC(void) {
 		_envTab[i][(_env[i].size())] = '\0';
 		i++;
 	}
+}
+
+void	cgi::exec_child(pid_t pid, int read_fd[2], int write_fd[2], std::string exec) {
+	std::cout << "\n[exec child]" << std::endl;
+	char *argv[3];
+	argv[0] = strdup(exec.c_str());
+	argv[1] = strdup(_env[cgi::SCRIPT_FILENAME].c_str());
+	argv[2] = NULL;
+	// close(write_fd[1]);
+	// close(read_fd[0]);
+	if (dup2(read_fd[1], STDOUT_FILENO) < 0) {
+		std::cout << "error : dup2 read failure" << std::endl;
+		close(write_fd[0]);
+		close(read_fd[1]);
+		return ;
+	}
+	if (dup2(write_fd[0], STDIN_FILENO) < 0) {
+		std::cout << "error : dup2 write failure" << std::endl;
+		close(write_fd[0]);
+		close(read_fd[1]);
+		return ;
+	}
+	int ret;
+	if ((ret = execve(argv[0], argv, _envTab)) < 0) {
+		std::cout << "error : execve failure, error: " << errno<< std::endl;
+		close(write_fd[0]);
+		close(read_fd[1]);
+		kill(pid, SIGTERM);
+	}
+	std::cout << "HERE" << std::endl;
+	char	buffer[100] = {0};
+	ret = 1;
+	while (ret > 0)
+	{
+		memset(buffer, 0, 100);
+		ret = read(write_fd[0], buffer, 100 - 1);
+		std::cout << buffer << std::endl;
+	}
+	std::cout << read_fd[1] << std::endl;
+	free(argv[0]);
+	free(argv[1]);
 }

@@ -1,8 +1,7 @@
 #ifndef CGI_HPP
 # define CGI_HPP
 
-#include <vector>
-#include <string>
+#include "webserv.hpp"
 
 class cgi {
 
@@ -36,10 +35,11 @@ class cgi {
 		TMP_DIR,
 		NB_CGI_VAR,
 	};
-	
-	cgi();
+
+	cgi(void);
 
 	void	convertToC(void);
+	void	exec_child(pid_t pid, int read_fd[2], int write_fd[2], std::string exec);
 
 	std::vector<std::string>	_env;
 	char						*_envTab[NB_CGI_VAR + 1];

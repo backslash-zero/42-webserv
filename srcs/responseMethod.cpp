@@ -81,48 +81,7 @@ void	Response::methodDelete(void){
 	return ;
 }
 
-void	Response::exec_child(pid_t pid, cgi *cgi, std::string exec) {
-	std::cout << "\n[exec child]" << std::endl;
-	char *argv[3];
-	argv[0] = strdup(exec.c_str());
-	argv[1] = strdup(cgi->_env[cgi::SCRIPT_FILENAME].c_str());
-	argv[2] = NULL;
-	// close(write_fd[1]);
-	// close(read_fd[0]);
-	if (dup2(read_fd[1], STDOUT_FILENO) < 0) {
-		std::cout << "error : dup2 read failure" << std::endl;
-		close(write_fd[0]);
-		close(read_fd[1]);
-		return ;
-	}
-	if (dup2(write_fd[0], STDIN_FILENO) < 0) {
-		std::cout << "error : dup2 write failure" << std::endl;
-		close(write_fd[0]);
-		close(read_fd[1]);
-		return ;
-	}
-	int ret;
-	if ((ret = execve(argv[0], argv, cgi->_envTab)) < 0) {
-		std::cout << "error : execve failure, error: " << errno<< std::endl;
-		close(write_fd[0]);
-		close(read_fd[1]);
-		kill(pid, SIGTERM);
-	}
-	std::cout << "HERE" << std::endl;
-	char	buffer[100] = {0};
-	ret = 1;
-	while (ret > 0)
-	{
-		memset(buffer, 0, 100);
-		ret = read(write_fd[0], buffer, 100 - 1);
-		std::cout << buffer << std::endl;
-	}
-	std::cout << read_fd[1] << std::endl;
-	free(argv[0]);
-	free(argv[1]);
-}
-
-void	Response::methodePost(void) {
+void	Response::methodPost(void) {
 	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
 		cgi		cgi;
 		pid_t	pid;
@@ -134,7 +93,7 @@ void	Response::methodePost(void) {
 			return ;
 		}
 		if (pid == 0) {
-			exec_child(pid, &cgi, _currentLoc.fastcgi_pass);
+			cgi.exec_child(pid, read_fd, write_fd, _currentLoc.fastcgi_pass);
 		}
 		else {
 			close(write_fd[0]);
