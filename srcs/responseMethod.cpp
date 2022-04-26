@@ -53,26 +53,38 @@ int		Response::readFile(std::string path){
 }
 
 void	Response::getMethod(void) {
-	/*if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
+	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
 		// execute cgi
 	}
-	else*/ if (readFile(_currentPath)) {
+	if (readFile(_currentPath)) {
 		setContentType(_currentPath);
 		setupHeader();
 	}
-	postMethod();
 	return ;
 }
 
-void	Response::deleteMethod(void) {
-	if (remove((_req.getPath()).c_str()) != 0)
-		std::cout << "remove function failed" << std::endl;
+void	Response::deleteMethod(void){
+	if (_currentPath.find("..")) {
+		setError(403);
+		setupHeader();
+		return ;
+	}
+	if (isFile(_currentPath)){
+		if (remove(_currentPath.c_str()) == 0)
+			_ret = 204;
+		else
+			setError(403);
+	}
+	else
+		setError(404);
+	setupHeader();
+	return ;
 }
 
-void	Response::exec_child(pid_t pid, cgi *cgi) {
+void	Response::exec_child(pid_t pid, cgi *cgi, std::string exec) {
 	std::cout << "exec child" << std::endl;
 	char *argv[3];
-	argv[0] = strdup(CGI_BIN);
+	argv[0] = strdup(exec.c_str());
 	argv[1] = strdup(cgi->_env[cgi::SCRIPT_FILENAME].c_str());
 	argv[2] = NULL;
 	// close(write_fd[1]);
@@ -89,8 +101,9 @@ void	Response::exec_child(pid_t pid, cgi *cgi) {
 		close(read_fd[1]);
 		return ;
 	}
-	if (execve(argv[0], argv, cgi->_envTab) < 0) {
-		std::cout << "error : execve failure" << std::endl;
+	int ret;
+	if ((ret = execve(argv[0], argv, cgi->_envTab)) < 0) {
+		std::cout << "error : execve failure, error: " << errno<< std::endl;
 		close(write_fd[0]);
 		close(read_fd[1]);
 		kill(pid, SIGTERM);
@@ -100,20 +113,29 @@ void	Response::exec_child(pid_t pid, cgi *cgi) {
 }
 
 void	Response::postMethod(void) {
-	cgi		cgi;
-	pid_t	pid;
+	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
+		cgi		cgi;
+		pid_t	pid;
 
-	cgi.convertToC();
-	if ((pid = fork()) == -1) {
-		std::cout << "error fork" << std::endl;
-		return ;
-	}
-	if (pid == 0) {
-		exec_child(pid, &cgi);
+		std::cout << "CGI_PASS => " << _currentLoc.fastcgi_pass << std::endl;
+		cgi.convertToC();
+		if ((pid = fork()) == -1) {
+			std::cout << "error fork" << std::endl;
+			return ;
+		}
+		if (pid == 0) {
+			exec_child(pid, &cgi, _currentLoc.fastcgi_pass);
+		}
+		else {
+			close(write_fd[0]);
+			close(read_fd[1]);
+			waitpid(pid, NULL, WNOHANG);
+		}
 	}
 	else {
-		close(write_fd[0]);
-		close(read_fd[1]);
-		waitpid(pid, NULL, WNOHANG);
+		_ret = 204;
+		setupHeader();
 	}
+	return ;
+
 }

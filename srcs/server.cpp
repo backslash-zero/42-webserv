@@ -66,7 +66,6 @@ bool Server::listenClient(int client_fd)
 	{ // if end of request
 		// process it
 		Request req(_requests[client_fd]);
-		std::cout << req;
 		//send response
 		Response resp(req, this);
 		std::string res = resp.process();

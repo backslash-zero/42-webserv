@@ -45,7 +45,7 @@ class Response{
 	void	deleteMethod(void);
 	void	postMethod(void);
 
-	void	exec_child(pid_t pid, cgi *cgi);
+	void	exec_child(pid_t pid, cgi *cgi, std::string exec);
 
 	std::string		setConnection(void);
 	std::string		setDate(void);

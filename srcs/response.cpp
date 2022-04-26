@@ -13,11 +13,13 @@ Response::Response(Request &request, Server *server):_req(request), _serv(server
 	_ret = _req.getRet();
 	isValidRequest(); // check if allowed methods is used, max_body_size,etc.. depending on server & location
 	_methodFt["GET"] = &Response::getMethod;
+	_methodFt["POST"] = &Response::postMethod;
+	_methodFt["DELETE"] = &Response::deleteMethod;
 }
 
 std::string		Response::process(){ // creation of response
 	if (_ret == 200){
-		//(this->*_methodFt[_req.getMethod()])();
+		(this->*_methodFt[_req.getMethod()])();
 	}
 	else { // error on request
 		setError(_ret);
@@ -59,6 +61,7 @@ void		Response::setupHeader(){ // setup header map, with corresponding function
 
 void		Response::setupError(){ // setup error code with corresponding message
 	_errorTemplate[200] = "Ok";
+	_errorTemplate[204] = "No Content";
 	_errorTemplate[400] = "Bad Request";
 	_errorTemplate[403] = "Forbidden";
 	_errorTemplate[404] = "Not Found";
@@ -191,15 +194,15 @@ void			Response::setLocation(){ // find best match for location
 				break;
 		}
 	}
-	_currentPath = (_currentLoc.root.size() > 0 ? _currentLoc.root : _currentConf.root) + _req.getPath();
+	_currentPath = _currentConf.root + _req.getPath();
 	//reinterpret the path if an index.html is specified and there is no autoindex
 	if (_currentLoc.path == _req.getPath()) {
 		if ((_currentConf.autoindex != "on" && _currentLoc.autoindex != "on" ) || _currentLoc.autoindex == "off"){
-			_currentPath = (_currentLoc.root.size() > 0 ? _currentLoc.root : _currentConf.root) + "/" +
+			_currentPath = _currentConf.root + "/" +
 						(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
 		}
 	}
-	std::cout << GREEN << "Coresponding location: " <<ret.second.path  << WHITE<< std::endl;
+	std::cout << GREEN << "\nCoresponding location: " <<ret.second.path  << WHITE<< std::endl;
 }
 
 void		Response::isValidRequest(){
