@@ -84,22 +84,9 @@ void	Response::methodDelete(void){
 void	Response::methodPost(void) {
 	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
 		cgi		cgi;
-		// pid_t	pid;
 
-		std::cout << "CGI_PASS => " << _currentLoc.fastcgi_pass << std::endl;
 		cgi.convertToC();
-		// if ((pid = fork()) == -1) {
-		// 	std::cout << "error fork" << std::endl;
-		// 	return ;
-		// }
-		// if (pid == 0) {
-			cgi.exec_child(_currentLoc.fastcgi_pass);
-		// }
-		// else {
-		// 	close(write_fd[0]);
-		// 	close(read_fd[1]);
-		// 	waitpid(pid, NULL, WNOHANG);
-		// }
+		cgi.exec_child(_currentLoc.fastcgi_pass);
 	}
 	else {
 		_ret = 204;
