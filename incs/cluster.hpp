@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../incs/server.hpp"
-
+#include "../incs/response.hpp"
 class Cluster {
 
 	public:
@@ -22,6 +22,7 @@ class Cluster {
 	std::vector<s_server_config>	_serverConf; // raw conf for each server
 	std::map<int, Server *>			_servers; // stores all servers created
 	std::map<int, Server *>			_clients; // stores all clients connected to serv
+	std::map<int, std::pair<std::string, int> >			_response; // list of response
 
 	int								_max_sk;
 	fd_set							_msfd; //master fd, handling incoming connection

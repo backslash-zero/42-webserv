@@ -19,11 +19,11 @@ class Response{
 	s_server_config _currentConf; // server's conf
 	s_location		_currentLoc; // location's config
 	std::string		_currentPath; // Parsed path
+	std::stringstream		_response; //response which will be send
 	private:
 
 	int				_ret; // error code
 
-	std::stringstream		_response; //response which will be send
 	std::stringstream		_header; //heade rof resp
 	std::stringstream		_body; //body of resp
 	std::map <std::string, std::string>	_headerTemplate; // stored header value

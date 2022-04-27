@@ -33,7 +33,7 @@ class Server{
 	~Server();
 	int		setup();
 	int		accept();
-	bool 	listenClient(int client_fd);
+	bool	listenClient(int client_fd, std::map<int, std::pair<std::string, int> > &_response);
 	std::vector<s_server_config> getConf();
 	int 			getPort();
 	int				getSocket();

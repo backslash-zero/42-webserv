@@ -53,7 +53,7 @@ int Server::accept()
 	return connection;
 }
 
-bool Server::listenClient(int client_fd)
+bool Server::listenClient(int client_fd, std::map<int, std::pair<std::string, int> > &_response)
 {
 	int ret;
 	char buffer[8192] = {0};
@@ -70,9 +70,9 @@ bool Server::listenClient(int client_fd)
 
 		Response resp(req, this);
 		std::string res = resp.process();
-		::send(client_fd, res.c_str(), res.size(), 0); //exemple
+		_response.insert(std::make_pair(client_fd, std::make_pair(res, req.getRet() >= 400 ? 0 : 1)));
 		_requests[client_fd].clear(); //clear request
-		return (req.getRet() >= 400 ? 0 : 1);
+		return 1;
 	}
 	return 1;
 }

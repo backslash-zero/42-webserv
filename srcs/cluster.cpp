@@ -457,13 +457,16 @@ bool Cluster::launch()
 	{
 		// We're making a copy because select() modifies the master fd set(_msfd).
 		fd_set rfds;
+		fd_set wfds;
 		FD_ZERO(&rfds);
+		FD_ZERO(&wfds);
 		memcpy(&rfds, &(this->_msfd), sizeof(this->_msfd));
 
 		// std::flush outputs cout to the console.
 		std::cout << "\rWaiting for client" << std::flush;
-
-		recVal = select(_max_sk + 1, &rfds, NULL, NULL, &tv); // wait for change on rfds
+		for (std::map<int, std::pair<std::string, int> >::iterator it = _response.begin() ; it != _response.end() ; it++)
+			FD_SET(it->first, &wfds);
+		recVal = select(_max_sk + 1, &rfds, &wfds, NULL, &tv); // wait for change on rfds
 		switch (recVal)
 		{
 			case (0):
@@ -481,15 +484,31 @@ bool Cluster::launch()
 			{
 				// select() changes the fd_set : it now contains ONLY the ones ready for reading.
 				// we then need to check each fd in the set to see if it's a new connection.
-
+				for (std::map<int, std::pair<std::string, int> >::iterator it = _response.begin(); it != _response.end(); it++)
+				{ // iterate on response ready to send
+					if (FD_ISSET(it->first, &wfds)){
+						send(it->first, it->second.first.c_str(), it->second.first.size(), 0); //exemple
+						if (it->second.second == 0) //Connection close cause of error
+						{
+							std::cout << RED << "\nConnection " << it->first << " closed." << WHITE << std::endl;
+							close(it->first);
+							FD_CLR(it->first, &rfds);
+							FD_CLR(it->first, &wfds);
+							FD_CLR(it->first, &(this->_msfd));
+							_clients.erase(it->first);
+						}
+						_response.erase(it);
+						break ;
+					}
+				}
 				for (std::map<int, Server *>::iterator it = _clients.begin(); it != _clients.end(); it++)
 				{ // iterate on connected clients
 					if (FD_ISSET(it->first, &rfds))
 					{ // search the client who send us smth
 						int client_fd = it->first;
-						int ret = it->second->listenClient(client_fd);
+						int ret = it->second->listenClient(client_fd, _response); // listen to it
 						if (ret <= 0)
-						{ // listen to it
+						{
 							std::cout << RED << "\nConnection " << client_fd << " closed." << WHITE << std::endl;
 							close(it->first);
 							FD_CLR(it->first, &rfds);
@@ -497,7 +516,6 @@ bool Cluster::launch()
 							_clients.erase(it->first);
 							it = _clients.begin();
 						}
-						recVal = 0;
 						break;
 					}
 				}
