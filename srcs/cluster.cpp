@@ -466,58 +466,58 @@ bool Cluster::launch()
 		recVal = select(_max_sk + 1, &rfds, NULL, NULL, &tv); // wait for change on rfds
 		switch (recVal)
 		{
-		case (0):
-		{ // Timeout
-			break;
-		}
-		case (-1):
-		{
-			perror("\nSelect failed");
-			for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++)
-				close(it->second->getSocket());
-			return false;
-		}
-		default: // change happened
-		{
-			// select() changes the fd_set : it now contains ONLY the ones ready for reading.
-			// we then need to check each fd in the set to see if it's a new connection.
+			case (0):
+			{ // Timeout
+				break;
+			}
+			case (-1):
+			{
+				perror("\nSelect failed");
+				for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++)
+					close(it->second->getSocket());
+				return false;
+			}
+			default: // change happened
+			{
+				// select() changes the fd_set : it now contains ONLY the ones ready for reading.
+				// we then need to check each fd in the set to see if it's a new connection.
 
-			for (std::map<int, Server *>::iterator it = _clients.begin(); it != _clients.end(); it++)
-			{ // iterate on connected clients
-				if (FD_ISSET(it->first, &rfds))
-				{ // search the client who send us smth
-					int client_fd = it->first;
-					int ret = it->second->listenClient(client_fd);
-					if (ret <= 0)
-					{ // listen to it
-						std::cout << RED << "\nConnection " << client_fd << " closed." << WHITE << std::endl;
-						close(it->first);
-						FD_CLR(it->first, &rfds);
-						FD_CLR(it->first, &(this->_msfd));
-						_clients.erase(it->first);
-						it = _clients.begin();
-					}
-					recVal = 0;
-					break;
-				}
-			}
-			for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++)
-			{ // iterate on server
-				if (FD_ISSET(it->second->getSocket(), &rfds))
-				{										   // search for the server who send us smth
-					int connection = it->second->accept(); // accept incomming connection
-					if (connection != -1)
-					{
-						std::cout << GREEN << "\nClient connected at port : " << BOLDWHITE << it->second->getPort() << RESET << std::endl;
-						FD_SET(connection, &(this->_msfd));						 // root client socket (connection) to master fd
-						_clients.insert(std::make_pair(connection, it->second)); // add client to connected client (_clients)
-						if (connection > _max_sk)
-							_max_sk = connection;
+				for (std::map<int, Server *>::iterator it = _clients.begin(); it != _clients.end(); it++)
+				{ // iterate on connected clients
+					if (FD_ISSET(it->first, &rfds))
+					{ // search the client who send us smth
+						int client_fd = it->first;
+						int ret = it->second->listenClient(client_fd);
+						if (ret <= 0)
+						{ // listen to it
+							std::cout << RED << "\nConnection " << client_fd << " closed." << WHITE << std::endl;
+							close(it->first);
+							FD_CLR(it->first, &rfds);
+							FD_CLR(it->first, &(this->_msfd));
+							_clients.erase(it->first);
+							it = _clients.begin();
+						}
+						recVal = 0;
+						break;
 					}
 				}
+				for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++)
+				{ // iterate on server
+					if (FD_ISSET(it->second->getSocket(), &rfds))
+					{										   // search for the server who send us smth
+						int connection = it->second->accept(); // accept incomming connection
+						if (connection != -1)
+						{
+							std::cout << GREEN << "\nClient connected at port : " << BOLDWHITE << it->second->getPort() << RESET << std::endl;
+							FD_SET(connection, &(this->_msfd));						 // root client socket (connection) to master fd
+							_clients.insert(std::make_pair(connection, it->second)); // add client to connected client (_clients)
+							if (connection > _max_sk)
+								_max_sk = connection;
+						}
+					}
+				}
+				break;
 			}
-			break;
-		}
 		}
 	}
 }

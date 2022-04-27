@@ -67,6 +67,7 @@ bool Server::listenClient(int client_fd)
 		// process it
 		Request req(_requests[client_fd]);
 		//send response
+
 		Response resp(req, this);
 		std::string res = resp.process();
 		::send(client_fd, res.c_str(), res.size(), 0); //exemple

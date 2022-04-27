@@ -54,7 +54,11 @@ int		Response::readFile(std::string path){
 
 void	Response::methodGet(void) {
 	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
-		// execute cgi
+		cgi		cgi;
+
+		cgi.convertToC(this);
+		cgi.exec_child(_currentLoc.fastcgi_pass);
+		return ;
 	}
 	if (readFile(_currentPath)) {
 		setContentType(_currentPath);
@@ -85,7 +89,7 @@ void	Response::methodPost(void) {
 	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
 		cgi		cgi;
 
-		cgi.convertToC();
+		cgi.convertToC(this);
 		cgi.exec_child(_currentLoc.fastcgi_pass);
 	}
 	else {

@@ -92,6 +92,7 @@ void		Response::setupConf(){
 	}
 	if (it == _conf.end())
 		_currentConf = *_conf.begin();
+
 	setLocation();
 }
 
@@ -184,6 +185,7 @@ void			Response::setLocation(){ // find best match for location
 				break;
 		}
 	}
+
 	_currentLoc = ret.second; // store loc
 	for (ite = _currentLoc.location.begin(); ite != _currentLoc.location.end(); ite++){ // search location in location conf
 		sim = locationSim(ite->path, _req.getPath());
@@ -198,8 +200,9 @@ void			Response::setLocation(){ // find best match for location
 	//reinterpret the path if an index.html is specified and there is no autoindex
 	if (_currentLoc.path == _req.getPath()) {
 		if ((_currentConf.autoindex != "on" && _currentLoc.autoindex != "on" ) || _currentLoc.autoindex == "off"){
-			_currentPath = _currentConf.root + "/" +
-						(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
+			if (_currentLoc.index.size() > 0 || _currentConf.index.size() > 0)
+				_currentPath = _currentConf.root + "/" +
+							(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
 		}
 	}
 	std::cout << GREEN << "\nCoresponding location: " <<ret.second.path  << WHITE<< std::endl;

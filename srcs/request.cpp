@@ -68,7 +68,6 @@ void	Request::parse(const std::string& content){
 	}
 	if (lineIdx != std::string::npos) //get body part
 		_body = content.substr(lineIdx, std::string::npos);
-	
 }
 
 void	Request::setHeader()
