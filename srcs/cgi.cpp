@@ -73,21 +73,22 @@ std::string	cgi::exec_child(std::string exec) {
 	write(fdIn, _body.c_str(), _body.size());
 	lseek(fdIn, 0, SEEK_SET);
 	if ((pid = fork()) == -1) {
-		std::cout << "error fork" << std::endl;
+		std::cerr << "error fork" << std::endl;
 		return NULL;
 	}
 	if (!pid) {
 		char * const * nll = NULL;
 		if (dup2(fdOut, STDOUT_FILENO) == -1) {
-			std::cout << "error : dup2 read failure" << std::endl;
+			std::cerr << "error : dup2 read failure" << std::endl;
 			return NULL;
 		}
 		if (dup2(fdIn, STDIN_FILENO) == -1) {
-			std::cout << "error : dup2 write failure" << std::endl;
+			std::cerr << "error : dup2 write failure" << std::endl;
 			return NULL;
 		}
 		if ((ret = execve(exec.c_str(), nll, _envTab)) == -1) {
-			std::cout << "error : execve failure, error: " << errno<< std::endl;
+			std::cerr << "error : execve failure, error: " << errno << std::endl;
+			perror("execve");
 			kill(pid, SIGTERM);
 		}
 	}
