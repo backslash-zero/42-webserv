@@ -19,14 +19,14 @@ void	cgi::setupEnv(Response *resp) {
 
 	_env.push_back("REQUEST_METHOD=" + resp->_req.getMethod());
 	_env.push_back("PATH_INFO=" + resp->_req.getPath());
-	_env.push_back("SCRIPT_FILENAME=" + resp->_req.getPath());
+	_env.push_back("SCRIPT_FILENAME=" + resp->_currentConf.root+ resp->_req.getPath());
 	_env.push_back("REQUEST_URI=" + resp->_req.getPath());
 	_env.push_back("SCRIPT_NAME=" + resp->_currentLoc.fastcgi_pass);
 	_env.push_back("REDIRECT_STATUS=200");
 
-	//_env.push_back("PATH_TRANSLATED=");
-	/*_env.push_back("QUERY_STRING=");
-	_env.push_back("REMOTE_HOST=");
+	_env.push_back("PATH_TRANSLATED=" + resp->_req.getPath());
+	_env.push_back("QUERY_STRING=" + resp->_req.getPath());
+	/*_env.push_back("REMOTE_HOST=");
 	_env.push_back("REMOTE_ADDR=");
 	_env.push_back("AUTH_TYPE=");
 	_env.push_back("REMOTE_USER=");
@@ -54,7 +54,7 @@ void	cgi::convertToC(Response *resp) {
 	}
 }
 
-void	cgi::exec_child(std::string exec) {
+std::string	cgi::exec_child(std::string exec) {
 	pid_t	pid;
 	int		saveIn;
 	int		saveOut;
@@ -74,17 +74,17 @@ void	cgi::exec_child(std::string exec) {
 	lseek(fdIn, 0, SEEK_SET);
 	if ((pid = fork()) == -1) {
 		std::cout << "error fork" << std::endl;
-		return ;
+		return NULL;
 	}
 	if (!pid) {
 		char * const * nll = NULL;
 		if (dup2(fdOut, STDOUT_FILENO) == -1) {
 			std::cout << "error : dup2 read failure" << std::endl;
-			return ;
+			return NULL;
 		}
 		if (dup2(fdIn, STDIN_FILENO) == -1) {
 			std::cout << "error : dup2 write failure" << std::endl;
-			return ;
+			return NULL;
 		}
 		if ((ret = execve(exec.c_str(), nll, _envTab)) == -1) {
 			std::cout << "error : execve failure, error: " << errno<< std::endl;
@@ -95,7 +95,7 @@ void	cgi::exec_child(std::string exec) {
 		char	buffer[100] = {0};
 
 		if (waitpid(-1, NULL, 0) == -1)
-			return ;
+			return NULL;
 		lseek(fdOut, 0, SEEK_SET);
 		ret = 1;
 		while (ret > 0) {
@@ -113,5 +113,5 @@ void	cgi::exec_child(std::string exec) {
 	close(saveIn);
 	close(saveOut);
 
-	std::cout << resp << std::endl;
+	return resp;
 }

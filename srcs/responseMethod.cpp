@@ -55,9 +55,16 @@ int		Response::readFile(std::string path){
 void	Response::methodGet(void) {
 	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
 		cgi		cgi;
+		std::string resp;
 
 		cgi.convertToC(this);
-		cgi.exec_child(_currentLoc.fastcgi_pass);
+		resp = cgi.exec_child(_currentLoc.fastcgi_pass);
+		std::cout << resp << std::endl;
+		/*
+			Parse cgi response, get status code, header
+			and create response
+			
+		*/
 		return ;
 	}
 	if (readFile(_currentPath)) {
@@ -88,9 +95,10 @@ void	Response::methodDelete(void){
 void	Response::methodPost(void) {
 	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
 		cgi		cgi;
+		std::string resp;
 
 		cgi.convertToC(this);
-		cgi.exec_child(_currentLoc.fastcgi_pass);
+		resp = cgi.exec_child(_currentLoc.fastcgi_pass);
 	}
 	else {
 		writeInFile(_req.getBody());
