@@ -15,11 +15,12 @@ Response::Response(Request &request, Server *server):_req(request), _serv(server
 	_methodFt["GET"] = &Response::methodGet;
 	_methodFt["POST"] = &Response::methodPost;
 	_methodFt["DELETE"] = &Response::methodDelete;
+	_methodFt["HEAD"] = &Response::methodHead;
 }
 
 std::string		Response::process(){ // creation of response
 	if (_ret == 200){
-		(this->*_methodFt[_req.getMethod()])();
+		(this->*_methodFt[_req.getMethod()])(); // get request method, and call corresponding function
 	}
 	else { // error on request
 		setError(_ret);

@@ -79,7 +79,7 @@ std::vector<s_location> Cluster::_setupLocation(const std::vector<std::string> &
 
 	while (it != ite)
 	{
-		std::cout << "-->it : " << *it << std::endl;
+		//std::cout << "-->it : " << *it << std::endl;
 		if (it->compare("location") == 0 && !first_loc)
 		{
 			first_loc = true;
@@ -94,7 +94,7 @@ std::vector<s_location> Cluster::_setupLocation(const std::vector<std::string> &
 		}
 		if (it->compare("location") == 0 && first_loc)
 		{
-			std::cout << "location into loc" << std::endl;
+			//std::cout << "location into loc" << std::endl;
 			std::vector<std::string>::const_iterator start = it;
 			int open = 1;
 			while (it != ite && open > 0)
@@ -151,7 +151,7 @@ std::vector<s_location> Cluster::_setupLocation(const std::vector<std::string> &
 		}
 		if (it->compare("}") == 0)
 		{
-			std::cout << "loc closed" << std::endl;
+			//std::cout << "loc closed" << std::endl;
 			s_lc.push_back(lc);
 			lc.root.clear();
 			lc.index.clear();
@@ -190,6 +190,13 @@ s_server_config Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 				if (it != ite && it->compare(";") != 0)
 					sv.server_name.push_back(*it);
 			}
+		}
+		if (it->compare("uploads") == 0)
+		{
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			sv.uploads = *it;
 		}
 		if (it->compare("error_page") == 0)
 		{
@@ -277,7 +284,7 @@ void Cluster::exploitTokens(std::vector<std::string> &tokens)
 					{
 						int open = 1;
 						// while (it != ite && it->compare("}") != 0) {
-						std::cout << "new LOC" << std::endl;
+						//std::cout << "new LOC" << std::endl;
 						while (it != ite && open > 0)
 						{
 							// std::cout << "it : " << *it << " open : " << open << std::endl;
@@ -323,6 +330,10 @@ void Cluster::printConfig(void)
 		if (!it->listen.empty())
 		{
 			std::cout << "listen : " << it->listen << std::endl;
+		}
+		if (!it->uploads.empty())
+		{
+			std::cout << "uploads : " << it->uploads << std::endl;
 		}
 		if (!it->server_name.empty())
 		{

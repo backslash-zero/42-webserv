@@ -44,6 +44,7 @@ class Response{
 	void	methodGet(void);
 	void	methodDelete(void);
 	void	methodPost(void);
+	void	methodHead(void);
 
 	std::string		setConnection(void);
 	std::string		setDate(void);
@@ -51,6 +52,7 @@ class Response{
 	std::string		setContentType(std::string path);
 
 	std::string		getHtmlFile(const std::string& path); // read file and return string
+	void			writeInFile(std::string body);
 
 	int		readFile(std::string path);
 	int		isFile(std::string path);

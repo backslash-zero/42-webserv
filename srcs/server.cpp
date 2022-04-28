@@ -61,9 +61,10 @@ bool Server::listenClient(int client_fd, std::map<int, std::pair<std::string, in
 	if (ret <= 0)
 		return ret;
 	_requests[client_fd] += buffer; // add content to client's request
+	std::cout << buffer << std::endl;
 	// std::cout << std::endl << GREEN << "Client on fd " << client_fd << " send \n[" << _requests[client_fd] << "]" << WHITE << std::endl;
-	if (_requests[client_fd].find("\r\n\r\n") != std::string::npos)
-	{ // if end of request
+	if (_requests[client_fd].find("\r\n\r\n") != std::string::npos)// if end of request
+	{
 		// process it
 		Request req(_requests[client_fd]);
 		//send response

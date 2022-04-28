@@ -7,11 +7,13 @@ cgi::cgi() {
 void	cgi::setupEnv(Response *resp) {
 	(void)resp;
 	std::cout << resp->_req.getBody()<<std::endl;
+	std::ostringstream portString;
+    portString << resp->_serv->getPort();
 	_env.clear();
 	_env.push_back("SERVER_NAME=webserv");
 	_env.push_back("SERVER_SOFTWARE=nginx/1.21.5");
 	_env.push_back("SERVER_PROTOCOL=HTTP/1.1");
-	_env.push_back("SERVER_PORT=" + resp->_serv->getPort());
+	_env.push_back("SERVER_PORT=" + portString.str());
 
 	_env.push_back("GATEWAY_INTERFACE=CGI/1.1");
 

@@ -20,6 +20,7 @@ struct s_server_config {
 	std::map<std::string, std::string>	error_page;
 	std::string							client_max_body_size;
 	std::string							root;
+	std::string							uploads;
 	std::list<std::string>				index;
 	std::string							autoindex;
 	std::vector<s_location>				location;

@@ -93,9 +93,46 @@ void	Response::methodPost(void) {
 		cgi.exec_child(_currentLoc.fastcgi_pass);
 	}
 	else {
-		_ret = 204;
+		writeInFile(_req.getBody());
+		if (_ret < 300)
+			setupHeader();
+	}
+	return ;
+}
+
+void	Response::methodHead(void) {
+	if (readFile(_currentPath)) {
+		_body.str("");
+		setContentType(_currentPath);
 		setupHeader();
 	}
 	return ;
+}
 
+void	Response::writeInFile(std::string body)
+{
+	std::ofstream	file;
+	std::string _path;
+
+	_path = _currentConf.uploads + _currentPath.substr(_currentPath.find_last_of('/'));
+	std::cout << _path << std::endl;
+	if (isFile(_path))
+	{
+		file.open(_path.c_str());
+		file << body;
+		file.close();
+		_ret = 204;
+	}
+	else
+	{
+		file.open(_path.c_str(), std::ofstream::out | std::ofstream::trunc);
+		if (file.is_open() == false){
+			setError(403);
+			return;
+		}
+
+		file << body;
+		file.close();
+		_ret = 201;
+	}
 }
