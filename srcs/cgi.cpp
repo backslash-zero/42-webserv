@@ -1,38 +1,46 @@
 #include "../incs/cgi.hpp"
 #include "../incs/response.hpp"
 
+std::string	to_string(size_t n)
+{
+	std::stringstream tmp;
+	tmp << n;
+	return tmp.str();
+}
+
 cgi::cgi() {
 }
 
 void	cgi::setupEnv(Response *resp) {
 	(void)resp;
-	std::cout << resp->_req.getBody()<<std::endl;
-	std::ostringstream portString;
-    portString << resp->_serv->getPort();
+	std::string truncPath = resp->_currentPath.substr(resp->_currentRoot.size());
+	std::cout << truncPath << std::endl;
 	_env.clear();
 	_env.push_back("SERVER_NAME=webserv");
 	_env.push_back("SERVER_SOFTWARE=nginx/1.21.5");
 	_env.push_back("SERVER_PROTOCOL=HTTP/1.1");
-	_env.push_back("SERVER_PORT=" + portString.str());
+	_env.push_back("SERVER_PORT=" + to_string(resp->_serv->getPort()));
 
 	_env.push_back("GATEWAY_INTERFACE=CGI/1.1");
 
 	_env.push_back("REQUEST_METHOD=" + resp->_req.getMethod());
-	_env.push_back("PATH_INFO=" + resp->_req.getPath());
-	_env.push_back("SCRIPT_FILENAME=" + resp->_currentConf.root+ resp->_req.getPath());
-	_env.push_back("REQUEST_URI=" + resp->_req.getPath());
+	_env.push_back("PATH_INFO=" + truncPath);
+	_env.push_back("SCRIPT_FILENAME=" + resp->_currentRoot + truncPath);
+	_env.push_back("REQUEST_URI=" + truncPath);
 	_env.push_back("SCRIPT_NAME=" + resp->_currentLoc.fastcgi_pass);
 	_env.push_back("REDIRECT_STATUS=200");
 
-	_env.push_back("PATH_TRANSLATED=" + resp->_req.getPath());
-	_env.push_back("QUERY_STRING=" + resp->_req.getPath());
+	_env.push_back("PATH_TRANSLATED=" + truncPath);
+	_env.push_back("QUERY_STRING=" + truncPath);
+	if (resp->_req.getBody().size() > 0) {
+		_env.push_back("CONTENT_LENGTH=" +  to_string(resp->_req.getBody().size()));
+		_env.push_back("CONTENT_TYPE=" + resp->_req._headers["Content-Type"]);
+	}
 	/*_env.push_back("REMOTE_HOST=");
 	_env.push_back("REMOTE_ADDR=");
 	_env.push_back("AUTH_TYPE=");
 	_env.push_back("REMOTE_USER=");
 	_env.push_back("REMOTE_IDENT=");
-	_env.push_back("CONTENT_TYPE=");
-	_env.push_back("CONTENT_LENGTH=");
 	_env.push_back("HTTP_ACCEPT=");
 	_env.push_back("HTTP_ACCEPT_LANGUAGE=");
 	_env.push_back("HTTP_USER_AGENT=");
@@ -52,9 +60,10 @@ void	cgi::convertToC(Response *resp) {
 		_envTab[i][(_env[i].size())] = '\0';
 		i++;
 	}
+	_envTab[i] = NULL;
 }
 
-std::string	cgi::exec_child(std::string exec) {
+std::string	cgi::exec_child(std::string exec, std::string body) {
 	pid_t	pid;
 	int		saveIn;
 	int		saveOut;
@@ -69,8 +78,7 @@ std::string	cgi::exec_child(std::string exec) {
 	int		ret = 1;
 
 	//test
-	std::string _body = "lol";
-	write(fdIn, _body.c_str(), _body.size());
+	write(fdIn, body.c_str(), body.size());
 	lseek(fdIn, 0, SEEK_SET);
 	if ((pid = fork()) == -1) {
 		std::cerr << "error fork" << std::endl;
@@ -113,6 +121,5 @@ std::string	cgi::exec_child(std::string exec) {
 	close(fdOut);
 	close(saveIn);
 	close(saveOut);
-
 	return resp;
 }

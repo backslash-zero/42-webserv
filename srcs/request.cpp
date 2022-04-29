@@ -4,6 +4,7 @@ Request::Request(const std::string& content):_method(""), _httpVersion(""), _ret
 {
 	setHeader();
 	parse(content);
+	isValidRequest();
 }
 
 Request::~Request(){
@@ -57,7 +58,8 @@ void	Request::parse(const std::string& content){
 		size_t del = line.find(":"); //find delimiter ":"
 		std::string key = line.substr(0, del); //get key
 		std::string value = line.substr(line.find_first_not_of(' ', del + 1), line.length()); //get value
-		if (del == std::string::npos || line[del -1] == ' ' || line[line.length() - 1] == ' '){
+		std::cout << line[line.find('-') + 1] << !isupper(line[line.find('-') + 1])<<std::endl;
+		if (del == std::string::npos || line[del -1] == ' ' || line[line.length() - 1] == ' ' || !isupper(line[line.find('-') + 1])){
 			setErrorCode(400, "Invalid header format.\n");
 			break ;
 		}
@@ -95,6 +97,14 @@ void	Request::setHeader()
 	_headers["User-Agent"] = "";
 	_headers["Www-Authenticate"] = "";
 	_headers["Connection"] = "Keep-Alive";
+}
+
+void	Request::isValidRequest(void){
+	if (_ret <= 300){
+
+		if (!_headers["Host"].size())
+			setErrorCode(400, "No Host specified.\n");
+	}
 }
 
 void	Request::setErrorCode(int code, std::string info){

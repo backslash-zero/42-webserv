@@ -197,12 +197,13 @@ void			Response::setLocation(){ // find best match for location
 				break;
 		}
 	}
-	_currentPath = _currentConf.root + _req.getPath();
+	_currentRoot = _currentLoc.root.size() ? _currentLoc.root : _currentConf.root;
+	_currentPath = _currentRoot + _req.getPath();
 	//reinterpret the path if an index.html is specified and there is no autoindex
 	if (_currentLoc.path == _req.getPath()) {
 		if ((_currentConf.autoindex != "on" && _currentLoc.autoindex != "on" ) || _currentLoc.autoindex == "off"){
 			if (_currentLoc.index.size() > 0 || _currentConf.index.size() > 0)
-				_currentPath = _currentConf.root + "/" +
+				_currentPath = _currentRoot + "/" +
 							(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
 		}
 	}
@@ -216,7 +217,7 @@ void		Response::isValidRequest(){
 		return ;
 	}
 	//is body too large
-	if (_req.getBody().size() > (unsigned)atoi(_currentConf.client_max_body_size.c_str())){
+	if ((unsigned)atoi(_currentConf.client_max_body_size.c_str()) > 0 && _req.getBody().size() > (unsigned)atoi(_currentConf.client_max_body_size.c_str())){
 		_ret = 413;
 		return ;
 	}

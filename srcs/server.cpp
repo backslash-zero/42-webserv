@@ -56,23 +56,26 @@ int Server::accept()
 bool Server::listenClient(int client_fd, std::map<int, std::pair<std::string, int> > &_response)
 {
 	int ret;
+	size_t len = 0;
 	char buffer[8192] = {0};
 	ret = ::recv(client_fd, buffer, 8192 - 1, 0); // listen to client
 	if (ret <= 0)
 		return ret;
 	_requests[client_fd] += buffer; // add content to client's request
-	std::cout << buffer << std::endl;
 	// std::cout << std::endl << GREEN << "Client on fd " << client_fd << " send \n[" << _requests[client_fd] << "]" << WHITE << std::endl;
-	if (_requests[client_fd].find("\r\n\r\n") != std::string::npos)// if end of request
+	if ((len = _requests[client_fd].find("\r\n\r\n")) != std::string::npos)// if end of request
 	{
-		// process it
-		Request req(_requests[client_fd]);
-		//send response
-
-		Response resp(req, this);
-		std::string res = resp.process();
-		_response.insert(std::make_pair(client_fd, std::make_pair(res, req.getRet() >= 400 ? 0 : 1)));
-		_requests[client_fd].clear(); //clear request
+		size_t	contentLen = std::atoi(_requests[client_fd].substr(_requests[client_fd].find("Content-Length: ") + 16, 10).c_str());
+		if (_requests[client_fd].size() >= len + contentLen){
+			// process it
+			Request req(_requests[client_fd]);
+			std::cout << req;
+			//send response
+			Response resp(req, this);
+			std::string res = resp.process();
+			_response.insert(std::make_pair(client_fd, std::make_pair(res, req.getRet() >= 400 ? 0 : 1)));
+			_requests[client_fd].clear(); //clear request
+		}
 		return 1;
 	}
 	return 1;

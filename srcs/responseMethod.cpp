@@ -58,13 +58,15 @@ void	Response::methodGet(void) {
 		std::string resp;
 
 		cgi.convertToC(this);
-		resp = cgi.exec_child(_currentLoc.fastcgi_pass);
-		std::cout << resp << std::endl;
-		/*
-			Parse cgi response, get status code, header
-			and create response
-			
-		*/
+		resp = cgi.exec_child(_currentLoc.fastcgi_pass, _req.getBody());
+		if (resp.find("No input file specified.") != std::string::npos) {
+			setError(404);
+			return ;
+		}
+		_ret = resp.find("Status: ") == std::string::npos ? 200 : std::atoi(resp.substr(8, 3).c_str());
+		_headerTemplate["Content-Type"] = resp.substr(resp.find("Content-type: ") + 14, resp.find_first_of(';', resp.find("Content-type: ")) - (resp.find("Content-type: ") + 14));
+		_body << resp.substr(resp.find("\r\n\r\n") + 4);
+		setupHeader();
 		return ;
 	}
 	if (readFile(_currentPath)) {
@@ -98,7 +100,14 @@ void	Response::methodPost(void) {
 		std::string resp;
 
 		cgi.convertToC(this);
-		resp = cgi.exec_child(_currentLoc.fastcgi_pass);
+		resp = cgi.exec_child(_currentLoc.fastcgi_pass, _req.getBody());
+		if (resp.find("No input file specified.")) {
+			_ret = 404;
+			return ;
+		}_ret = resp.find("Status: ") == std::string::npos ? 200 : std::atoi(resp.substr(8, 3).c_str());
+		_headerTemplate["Content-Type"] = resp.substr(resp.find("Content-type: ") + 14, resp.find_first_of(';', resp.find("Content-type: ")) - (resp.find("Content-type: ") + 14));
+		_body << resp.substr(resp.find("\r\n\r\n") + 4);
+		setupHeader();
 	}
 	else {
 		writeInFile(_req.getBody());
@@ -138,7 +147,6 @@ void	Response::writeInFile(std::string body)
 			setError(403);
 			return;
 		}
-
 		file << body;
 		file.close();
 		_ret = 201;

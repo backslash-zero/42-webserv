@@ -1,9 +1,9 @@
-POST /post/test.txt HTTP/1.1
+POST /text.txt HTTP/1.1
 User-Agent: custom-client
 Host: weebserv
 Accept-Language: en-US
 Connection: Keep-Alive
-Content-type: text/html
-Content-length: 4
+Content-Type: text/txt
+Content-Length: 4
 
 Test

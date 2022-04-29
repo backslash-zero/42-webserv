@@ -19,6 +19,7 @@ class Response{
 	s_server_config _currentConf; // server's conf
 	s_location		_currentLoc; // location's config
 	std::string		_currentPath; // Parsed path
+	std::string		_currentRoot;
 	std::stringstream		_response; //response which will be send
 	private:
 

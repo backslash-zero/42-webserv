@@ -42,7 +42,7 @@ class cgi {
 
 	void	convertToC(Response *resp);
 	void	setupEnv(Response *resp);
-	std::string	exec_child(std::string exec);
+	std::string	exec_child(std::string exec, std::string body);
 
 	std::vector<std::string>	_env;
 	char						*_envTab[NB_CGI_VAR + 1];
