@@ -53,7 +53,7 @@ int		Response::readFile(std::string path){
 }
 
 void	Response::methodGet(void) {
-	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
+	if (_currentLoc.fastcgi_pass.size() > 0 && isFile(_currentLoc.fastcgi_pass.c_str())) { //check for cgi
 		cgi		cgi;
 		std::string resp;
 
@@ -95,8 +95,7 @@ void	Response::methodDelete(void){
 }
 
 void	Response::methodPost(void) {
-		std::cout << "CGIIIIIIII" << std::endl;
-	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
+	if (_currentLoc.fastcgi_pass.size() > 0 && isFile(_currentLoc.fastcgi_pass.c_str())) { //check for cgi
 		cgi		cgi;
 		std::string resp;
 

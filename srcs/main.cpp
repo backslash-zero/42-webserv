@@ -11,7 +11,7 @@ int launch_cluster(char *conf_file)
 	try	{
 		std::vector<std::string> tokens = parser.ParseFile(conf_file);
 		cluster.exploitTokens(tokens);
-		//cluster.printConfig();
+		// cluster.printConfig();
 		cluster.initCluster();
 		cluster.launch();
 	}

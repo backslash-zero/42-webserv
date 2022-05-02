@@ -79,7 +79,6 @@ std::vector<s_location> Cluster::_setupLocation(const std::vector<std::string> &
 
 	while (it != ite)
 	{
-		//std::cout << "-->it : " << *it << std::endl;
 		if (it->compare("location") == 0 && !first_loc)
 		{
 			first_loc = true;
@@ -94,7 +93,6 @@ std::vector<s_location> Cluster::_setupLocation(const std::vector<std::string> &
 		}
 		if (it->compare("location") == 0 && first_loc)
 		{
-			//std::cout << "location into loc" << std::endl;
 			std::vector<std::string>::const_iterator start = it;
 			int open = 1;
 			while (it != ite && open > 0)
@@ -151,7 +149,6 @@ std::vector<s_location> Cluster::_setupLocation(const std::vector<std::string> &
 		}
 		if (it->compare("}") == 0)
 		{
-			//std::cout << "loc closed" << std::endl;
 			s_lc.push_back(lc);
 			lc.root.clear();
 			lc.index.clear();
@@ -160,7 +157,6 @@ std::vector<s_location> Cluster::_setupLocation(const std::vector<std::string> &
 			lc.location.clear();
 			lc.methods.clear();
 			first_loc = false;
-			// lc.fastcgi_param.clear();
 		}
 		it++;
 	}
@@ -200,20 +196,6 @@ s_server_config Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 		}
 		if (it->compare("error_page") == 0)
 		{
-			// std::vector<std::string>::iterator tmp = it;
-			// while (it != ite && it->compare(";") != 0)
-			// 	it++;
-			// it--;
-			// std::string value = *it;
-			// serv.erase(it);
-			// it = tmp;
-			// while (it != ite && it->compare(";") != 0) {
-			// 	it++;
-			// 	if (it->compare(";") != 0) {
-			// 		std::string tmp = *it;
-			// 		sv.error_page.insert(std::make_pair(atoi(tmp.c_str()), value));
-			// 	}
-			// }
 			it++;
 			if (it == ite || it->compare(";") == 0)
 				throw std::logic_error("argument not find");
@@ -283,11 +265,9 @@ void Cluster::exploitTokens(std::vector<std::string> &tokens)
 					if (it->compare("location") == 0)
 					{
 						int open = 1;
-						// while (it != ite && it->compare("}") != 0) {
-						//std::cout << "new LOC" << std::endl;
+					
 						while (it != ite && open > 0)
 						{
-							// std::cout << "it : " << *it << " open : " << open << std::endl;
 							loc.push_back(*it);
 							vec.erase(it);
 							if (it != ite && it->compare("}") == 0)
@@ -305,10 +285,6 @@ void Cluster::exploitTokens(std::vector<std::string> &tokens)
 				}
 				serv.push_back(*it);
 				vec.erase(it);
-				// std::cout << "print LOC" << std::endl;
-				// for (std::vector<std::string>::iterator it = loc.begin(); it != loc.end(); it++) {
-				// 	std::cout << "it : " << *it << std::endl;
-				// }
 				_serverConf.push_back(_setupServer(serv, loc));
 				serv.clear();
 				loc.clear();
@@ -382,8 +358,6 @@ void Cluster::printConfig(void)
 					std::cout << "autoindex : " << i->autoindex << std::endl;
 				if (!i->fastcgi_pass.empty())
 					std::cout << "fastcgi_pass : " << i->fastcgi_pass << std::endl;
-				// if (!i->location.empty())
-				// 	std::cout << "location : " << i->location.begin()->path << std::endl;
 				for (std::vector<s_location>::iterator k = i->location.begin(); k != i->location.end(); k++)
 				{
 					std::cout << "[location] of location" << std::endl;
@@ -575,16 +549,23 @@ Cluster::t_conf Cluster::_getListen()
 			port = atoi(tmp.substr(ret + 1, tmp.length() - ret).c_str());
 		else
 			port = atoi(tmp.c_str());
+		if (!res[port].empty())
+			throw std::logic_error("PORT already used by a server");
+		DIR *dir = opendir(it->root.c_str());
+		if (dir == NULL)
+			throw std::logic_error("ROOT path doesn't exist");
 		res[port].push_back(*it);
 	}
 	// display map
-	/*t_conf::iterator b;
+
+	std::cout << "-- DISPAY MAP --" << std::endl;
+	t_conf::iterator b;
 	for (b = res.begin(); b != res.end(); b++)
 	{
-		std::cout << b->first << std::endl;
+		std::cout << "first : " << b->first << std::endl;
 		std::vector<s_server_config>::iterator z;
 		for (z = b->second.begin(); z != b->second.end(); z++)
-			std::cout << z->server_name.front() << std::endl;
-	}*/
+			std::cout << "second : " << z->server_name.front() << std::endl;
+	}
 	return res;
 }
