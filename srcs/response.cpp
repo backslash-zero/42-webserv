@@ -15,7 +15,6 @@ Response::Response(Request &request, Server *server):_req(request), _serv(server
 	_methodFt["GET"] = &Response::methodGet;
 	_methodFt["POST"] = &Response::methodPost;
 	_methodFt["DELETE"] = &Response::methodDelete;
-	_methodFt["HEAD"] = &Response::methodHead;
 }
 
 std::string		Response::process(){ // creation of response
@@ -34,6 +33,7 @@ void		Response::setError(int ret){
 	_headerTemplate["Content-Type"] = "text/html";
 	_headerTemplate["Connection"] = "Close";
 	std::map<std::string, std::string>::iterator errPage = _currentConf.error_page.find(toString(_ret));
+	std::cout << _currentConf.error_page.size() << std::endl;
 	if (errPage != _currentConf.error_page.end() && isFile(errPage->second)){ // err Page is defined in conf file
 		_body << getHtmlFile(errPage->second);
 	}
@@ -86,7 +86,7 @@ void		Response::setupConf(){
 	std::vector<s_server_config>::iterator it = _conf.begin();
 
 	for ( ; it != _conf.end(); it++){
-		if (it->server_name.front() == host){
+		if (it->server_name.front() == host.substr(0, host.find(':'))){
 			_currentConf = *it;
 			break;
 		}

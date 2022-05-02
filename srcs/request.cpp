@@ -25,7 +25,7 @@ std::string Request::getLine(const std::string& content, size_t &line){
 }
 
 void		Request::parseHeading(const std::string& str){
-	char const *x[] = { "GET", "HEAD", "POST", "PUT", "DELETE"};
+	char const *x[] = { "GET", "POST", "DELETE"};
 	std::vector<std::string> avMethods(x, x + sizeof(x) / sizeof(*x));
 	size_t	i;
 	size_t	j;
@@ -58,8 +58,7 @@ void	Request::parse(const std::string& content){
 		size_t del = line.find(":"); //find delimiter ":"
 		std::string key = line.substr(0, del); //get key
 		std::string value = line.substr(line.find_first_not_of(' ', del + 1), line.length()); //get value
-		std::cout << line[line.find('-') + 1] << !isupper(line[line.find('-') + 1])<<std::endl;
-		if (del == std::string::npos || line[del -1] == ' ' || line[line.length() - 1] == ' ' || !isupper(line[line.find('-') + 1])){
+		if (del == std::string::npos || line[del -1] == ' ' || line[line.length() - 1] == ' ' || !isupper(key[key.find('-') + 1])){
 			setErrorCode(400, "Invalid header format.\n");
 			break ;
 		}

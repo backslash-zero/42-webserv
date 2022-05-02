@@ -117,22 +117,12 @@ void	Response::methodPost(void) {
 	return ;
 }
 
-void	Response::methodHead(void) {
-	if (readFile(_currentPath)) {
-		_body.str("");
-		setContentType(_currentPath);
-		setupHeader();
-	}
-	return ;
-}
-
 void	Response::writeInFile(std::string body)
 {
 	std::ofstream	file;
 	std::string _path;
 
 	_path = _currentConf.uploads + _currentPath.substr(_currentPath.find_last_of('/'));
-	std::cout << _path << std::endl;
 	if (isFile(_path))
 	{
 		file.open(_path.c_str());
