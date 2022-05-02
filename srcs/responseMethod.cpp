@@ -95,16 +95,19 @@ void	Response::methodDelete(void){
 }
 
 void	Response::methodPost(void) {
+		std::cout << "CGIIIIIIII" << std::endl;
 	if (_currentLoc.fastcgi_pass.size() > 0) { //check for cgi
 		cgi		cgi;
 		std::string resp;
 
 		cgi.convertToC(this);
 		resp = cgi.exec_child(_currentLoc.fastcgi_pass, _req.getBody());
-		if (resp.find("No input file specified.")) {
-			_ret = 404;
+		std::cout << resp << std::endl;
+		if (resp.find("No input file specified.") != std::string::npos) {
+			setError(404);
 			return ;
-		}_ret = resp.find("Status: ") == std::string::npos ? 200 : std::atoi(resp.substr(8, 3).c_str());
+		}
+		_ret = resp.find("Status: ") == std::string::npos ? 200 : std::atoi(resp.substr(8, 3).c_str());
 		_headerTemplate["Content-Type"] = resp.substr(resp.find("Content-type: ") + 14, resp.find_first_of(';', resp.find("Content-type: ")) - (resp.find("Content-type: ") + 14));
 		_body << resp.substr(resp.find("\r\n\r\n") + 4);
 		setupHeader();

@@ -12,6 +12,7 @@ Response::Response(Request &request, Server *server):_req(request), _serv(server
 	setupConf();
 	_ret = _req.getRet();
 	isValidRequest(); // check if allowed methods is used, max_body_size,etc.. depending on server & location
+
 	_methodFt["GET"] = &Response::methodGet;
 	_methodFt["POST"] = &Response::methodPost;
 	_methodFt["DELETE"] = &Response::methodDelete;
@@ -25,6 +26,7 @@ std::string		Response::process(){ // creation of response
 		setError(_ret);
 	}
 	writeResp();
+	std::cout << _response.str()<< std::endl;
 	return _response.str();
 }
 

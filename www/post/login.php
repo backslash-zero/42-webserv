@@ -54,7 +54,7 @@
         <div id="container">
             <!-- zone de connexion -->
             
-            <form action="response.php" method="post">
+            <form action="/post/response.php" method="post">
                 <h1>Connexion</h1>
                 
                 <label><b>Nom d'utilisateur</b></label>

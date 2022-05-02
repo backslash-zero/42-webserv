@@ -14,7 +14,7 @@ cgi::cgi() {
 void	cgi::setupEnv(Response *resp) {
 	(void)resp;
 	std::string truncPath = resp->_currentPath.substr(resp->_currentRoot.size());
-	std::cout << truncPath << std::endl;
+	std::cout << "CGI" << truncPath << std::endl;
 	_env.clear();
 	_env.push_back("SERVER_NAME=webserv");
 	_env.push_back("SERVER_SOFTWARE=nginx/1.21.5");

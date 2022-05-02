@@ -58,7 +58,7 @@ void	Request::parse(const std::string& content){
 		size_t del = line.find(":"); //find delimiter ":"
 		std::string key = line.substr(0, del); //get key
 		std::string value = line.substr(line.find_first_not_of(' ', del + 1), line.length()); //get value
-		if (del == std::string::npos || line[del -1] == ' ' || line[line.length() - 1] == ' ' || !isupper(key[key.find('-') + 1])){
+		if (del == std::string::npos || line[del -1] == ' ' || line[line.length() - 1] == ' ' /*|| !isupper(key[key.find('-') + 1])*/){
 			setErrorCode(400, "Invalid header format.\n");
 			break ;
 		}
