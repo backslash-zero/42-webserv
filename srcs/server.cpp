@@ -58,6 +58,7 @@ bool Server::listenClient(int client_fd, std::map<int, std::pair<std::string, in
 	int ret;
 	size_t len = 0;
 	char buffer[8192] = {0};
+	size_t	contentLen = 0;
 	ret = ::recv(client_fd, buffer, 8192 - 1, 0); // listen to client
 	if (ret <= 0)
 		return ret;
@@ -65,7 +66,8 @@ bool Server::listenClient(int client_fd, std::map<int, std::pair<std::string, in
 	// std::cout << std::endl << GREEN << "Client on fd " << client_fd << " send \n[" << _requests[client_fd] << "]" << WHITE << std::endl;
 	if ((len = _requests[client_fd].find("\r\n\r\n")) != std::string::npos)// if end of request
 	{
-		size_t	contentLen = std::atoi(_requests[client_fd].substr(_requests[client_fd].find("Content-Length: ") + 16, 10).c_str());
+		if (_requests[client_fd].find("Content-Length: ") != std::string::npos)
+			contentLen = std::atoi(_requests[client_fd].substr(_requests[client_fd].find("Content-Length: ") + 16, 10).c_str());
 		if (_requests[client_fd].size() >= len + contentLen){
 			// process it
 			Request req(_requests[client_fd]);

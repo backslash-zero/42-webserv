@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <dirent.h>
 
+#include <csignal>
 #include <iostream>
 #include <fstream>
 #include <sstream>

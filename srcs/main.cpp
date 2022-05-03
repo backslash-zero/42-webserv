@@ -3,11 +3,14 @@
 #include "../incs/cluster.hpp"
 #include "../incs/error.hpp"
 
+Cluster	*g_cluster;
+
 int launch_cluster(char *conf_file)
 {
 	Parser			parser;
 	Cluster			cluster;
 
+	g_cluster = &cluster;
 	try	{
 		std::vector<std::string> tokens = parser.ParseFile(conf_file);
 		cluster.exploitTokens(tokens);

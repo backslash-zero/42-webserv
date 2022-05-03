@@ -26,7 +26,6 @@ std::string		Response::process(){ // creation of response
 		setError(_ret);
 	}
 	writeResp();
-	std::cout << _response.str()<< std::endl;
 	return _response.str();
 }
 
@@ -35,7 +34,6 @@ void		Response::setError(int ret){
 	_headerTemplate["Content-Type"] = "text/html";
 	_headerTemplate["Connection"] = "Close";
 	std::map<std::string, std::string>::iterator errPage = _currentConf.error_page.find(toString(_ret));
-	std::cout << _currentConf.error_page.size() << std::endl;
 	if (errPage != _currentConf.error_page.end() && isFile(errPage->second)){ // err Page is defined in conf file
 		_body << getHtmlFile(errPage->second);
 	}

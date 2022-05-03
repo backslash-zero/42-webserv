@@ -43,11 +43,11 @@ class Server{
 	std::string 	createResponse(int code, std::string param);
 	std::string		getHtmlFile(const std::string& path);
 
+	int								_sockfd;
 	private:
 
 	int								_port;
-	int								_sockfd;
 	sockaddr_in						sockaddr;
-	std::map<int, std::string>		_requests; // stores requests.
 	std::vector<s_server_config>	_conf; //conf of server/host
+	std::map<int, std::string>		_requests; // stores requests.
 };

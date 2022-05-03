@@ -1,6 +1,9 @@
 
 #include "../incs/cluster.hpp"
 
+bool	stop = false;
+
+
 static s_location _setupLocationBis(const std::vector<std::string> &loc)
 {
 	s_location lc;
@@ -410,9 +413,9 @@ bool Cluster::initCluster()
 	this->_config = _getListen();
 	t_conf::iterator it = this->_config.begin();
 	t_conf::iterator ite = this->_config.end();
+	FD_ZERO(&_msfd);
 	for (; it != ite; it++)
 	{
-
 		// for each port we instatiate server
 		int port = it->first;
 		this->_servers.insert(std::make_pair(port, new Server(port, it->second)));
@@ -432,14 +435,30 @@ bool Cluster::initCluster()
 	return true;
 }
 
+void	sig_close(int sig){
+	(void)sig;
+	std::map<int, Server *>::iterator it = g_cluster->_servers.begin();
+	for ( ; it != g_cluster->_servers.end(); it++){
+		close(it->second->_sockfd);
+	}
+	it = g_cluster->_clients.begin();
+	for ( ; it != g_cluster->_clients.end(); it++){
+		close(it->first);
+	}
+	stop = true;
+}
+
 bool Cluster::launch()
 {
-
+	signal(SIGINT, sig_close);
 	struct timeval tv; // timevalue is only used for select's last parameter: timeout value.
 	int recVal = 0;
 	tv.tv_sec = 1;
+	tv.tv_usec = 0;
 	while (true)
 	{
+		if (stop == true)
+			break ;
 		// We're making a copy because select() modifies the master fd set(_msfd).
 		fd_set rfds;
 		fd_set wfds;
@@ -523,6 +542,16 @@ bool Cluster::launch()
 			}
 		}
 	}
+	return true;
+}
+
+Cluster::~Cluster()
+{
+	std::map<int, Server *>::iterator it = this->_servers.begin();
+	for (; it != this->_servers.end(); it++)
+	{
+		delete it->second;
+	}
 }
 
 Cluster::Cluster()
@@ -554,6 +583,7 @@ Cluster::t_conf Cluster::_getListen()
 		DIR *dir = opendir(it->root.c_str());
 		if (dir == NULL)
 			throw std::logic_error("ROOT path doesn't exist");
+		closedir(dir);
 		res[port].push_back(*it);
 	}
 	// display map

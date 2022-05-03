@@ -77,7 +77,7 @@ void	Response::methodGet(void) {
 }
 
 void	Response::methodDelete(void){
-	if (_currentPath.find("..")) {
+	if (_currentPath.find("..") != std::string::npos) {
 		setError(403);
 		setupHeader();
 		return ;

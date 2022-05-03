@@ -78,6 +78,7 @@ std::string	cgi::exec_child(std::string exec, std::string body) {
 	int		ret = 1;
 
 	//test
+	std::cout << body << std::endl;
 	write(fdIn, body.c_str(), body.size());
 	lseek(fdIn, 0, SEEK_SET);
 	if ((pid = fork()) == -1) {
