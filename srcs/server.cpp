@@ -13,7 +13,7 @@ int Server::setup()
 	// config socket
 	if (_sockfd == -1)
 	{
-		std::cerr << "Failed to create socket. errno: " << errno << std::endl;
+		std::cerr << "Failed to create socket." << std::endl;
 		return -1;
 	}
 	int on = 1;
@@ -47,7 +47,7 @@ int Server::accept()
 	connection = ::accept(_sockfd, (struct sockaddr *)&sockaddr, (socklen_t *)&addrlen); // accept incoming connection, and create specific socket for client (connection)
 	if (connection < 0)
 	{
-		std::cerr << "Failed to grab connection. errno: " << errno << std::endl;
+		std::cerr << "Failed to grab connection." << std::endl;
 		close(connection);
 	}
 	return connection;

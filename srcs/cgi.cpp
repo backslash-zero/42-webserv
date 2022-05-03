@@ -77,9 +77,15 @@ std::string	cgi::exec_child(std::string exec, std::string body) {
 	long	fdOut = fileno(fileOut);
 	int		ret = 1;
 
-	//test
-	std::cout << body << std::endl;
-	write(fdIn, body.c_str(), body.size());
+	int ret_w = write(fdIn, body.c_str(), body.size());
+	if (!ret_w) {
+		std::cerr << "nothing writed" << std::endl;
+		return NULL;
+	}
+	if (ret_w == -1) {
+		std::cerr << "error: write" << std::endl;
+		return NULL;
+	}
 	lseek(fdIn, 0, SEEK_SET);
 	if ((pid = fork()) == -1) {
 		std::cerr << "error fork" << std::endl;
@@ -96,8 +102,7 @@ std::string	cgi::exec_child(std::string exec, std::string body) {
 			return NULL;
 		}
 		if ((ret = execve(exec.c_str(), nll, _envTab)) == -1) {
-			std::cerr << "error : execve failure, error: " << errno << std::endl;
-			perror("execve");
+			std::cerr << "error : execve failure" << std::endl;
 			kill(pid, SIGTERM);
 		}
 	}
@@ -110,7 +115,10 @@ std::string	cgi::exec_child(std::string exec, std::string body) {
 		ret = 1;
 		while (ret > 0) {
 			memset(buffer, 0, 100);
-			ret = read(fdOut, buffer, 100 - 1);
+			if ((ret = read(fdOut, buffer, 100 - 1)) == -1) {
+				std::cerr << "error : read failure" << std::endl;
+				return NULL;
+			}
 			resp += buffer;
 		}
 	}

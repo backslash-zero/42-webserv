@@ -479,7 +479,6 @@ bool Cluster::launch()
 			}
 			case (-1):
 			{
-				perror("\nSelect failed");
 				for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++)
 					close(it->second->getSocket());
 				return false;
@@ -491,8 +490,8 @@ bool Cluster::launch()
 				for (std::map<int, std::pair<std::string, int> >::iterator it = _response.begin(); it != _response.end(); it++)
 				{ // iterate on response ready to send
 					if (FD_ISSET(it->first, &wfds)){
-						send(it->first, it->second.first.c_str(), it->second.first.size(), 0); //exemple
-						if (it->second.second == 0) //Connection close cause of error
+						int ret_s = send(it->first, it->second.first.c_str(), it->second.first.size(), 0); //exemple
+						if (it->second.second == 0 || ret_s == -1 || !ret_s) //Connection close cause of error
 						{
 							std::cout << RED << "\nConnection " << it->first << " closed." << WHITE << std::endl;
 							close(it->first);
@@ -580,22 +579,22 @@ Cluster::t_conf Cluster::_getListen()
 			port = atoi(tmp.c_str());
 		if (!res[port].empty())
 			throw std::logic_error("PORT already used by a server");
+		res[port].push_back(*it);
 		DIR *dir = opendir(it->root.c_str());
 		if (dir == NULL)
 			throw std::logic_error("ROOT path doesn't exist");
 		closedir(dir);
-		res[port].push_back(*it);
 	}
 	// display map
 
-	std::cout << "-- DISPAY MAP --" << std::endl;
-	t_conf::iterator b;
-	for (b = res.begin(); b != res.end(); b++)
-	{
-		std::cout << "first : " << b->first << std::endl;
-		std::vector<s_server_config>::iterator z;
-		for (z = b->second.begin(); z != b->second.end(); z++)
-			std::cout << "second : " << z->server_name.front() << std::endl;
-	}
+	// std::cout << "-- DISPAY MAP --" << std::endl;
+	// t_conf::iterator b;
+	// for (b = res.begin(); b != res.end(); b++)
+	// {
+	// 	std::cout << "first : " << b->first << std::endl;
+	// 	std::vector<s_server_config>::iterator z;
+	// 	for (z = b->second.begin(); z != b->second.end(); z++)
+	// 		std::cout << "second : " << z->server_name.front() << std::endl;
+	// }
 	return res;
 }
