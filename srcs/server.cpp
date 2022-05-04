@@ -88,7 +88,7 @@ Server::~Server()
 	if (_sockfd)
 	{
 		close(_sockfd);
-		std::cout << "Server shutdown." << std::endl;
+		std::cout << "\nServer shutdown." << std::endl;
 	}
 }
 
