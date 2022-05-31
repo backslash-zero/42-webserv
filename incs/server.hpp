@@ -16,7 +16,7 @@ struct s_location {
 struct s_server_config {
 	std::string							listen;
 	int									port;
-	std::list<std::string>				server_name;
+	std::string							server_name;
 	std::map<std::string, std::string>	error_page;
 	std::string							client_max_body_size;
 	std::string							root;

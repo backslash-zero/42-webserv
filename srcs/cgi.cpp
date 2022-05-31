@@ -78,10 +78,6 @@ std::string	cgi::exec_child(std::string exec, std::string body) {
 	int		ret = 1;
 
 	int ret_w = write(fdIn, body.c_str(), body.size());
-	if (!ret_w) {
-		std::cerr << "nothing writed" << std::endl;
-		return NULL;
-	}
 	if (ret_w == -1) {
 		std::cerr << "error: write" << std::endl;
 		return NULL;

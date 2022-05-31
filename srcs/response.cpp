@@ -86,11 +86,12 @@ void		Response::setupConf(){
 	std::vector<s_server_config>::iterator it = _conf.begin();
 
 	for ( ; it != _conf.end(); it++){
-		if (it->server_name.front() == host.substr(0, host.find(':'))){
+		if (it->server_name == host.substr(0, host.find(':'))){
 			_currentConf = *it;
 			break;
 		}
 	}
+	std::cout << _currentConf.autoindex << std::endl;
 	if (it == _conf.end())
 		_currentConf = *_conf.begin();
 

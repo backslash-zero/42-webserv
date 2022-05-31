@@ -30,7 +30,7 @@ class Request
 			std::string							_body;
 			std::string							_path;
 
-			void			parse(const std::string& content);
+			void			parse(std::string& content);
 			std::string		getLine(const std::string& content, size_t &line);
 			void			setErrorCode(int code, std::string info);
 			void			isValidRequest(void);

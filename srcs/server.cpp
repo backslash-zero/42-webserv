@@ -53,6 +53,21 @@ int Server::accept()
 	return connection;
 }
 
+int		checkEnd(const std::string& str, const std::string& end)
+{
+	size_t	i = str.size();
+	size_t	j = end.size();
+
+	while (j > 0)
+	{
+		i--;
+		j--;
+		if ((int)i < 0 || str[i] != end[j])
+			return (1);
+	}
+	return (0);
+}
+
 bool Server::listenClient(int client_fd, std::map<int, std::pair<std::string, int> > &_response)
 {
 	int ret;
@@ -68,10 +83,12 @@ bool Server::listenClient(int client_fd, std::map<int, std::pair<std::string, in
 	{
 		if (_requests[client_fd].find("Content-Length: ") != std::string::npos)
 			contentLen = std::atoi(_requests[client_fd].substr(_requests[client_fd].find("Content-Length: ") + 16, 10).c_str());
+		if (_requests[client_fd].find("Transfer-Encoding: chunked") != std::string::npos && checkEnd(_requests[client_fd], "0\r\n\r\n") == 1)
+			return 1;
 		if (_requests[client_fd].size() >= len + contentLen){
 			// process it
 			Request req(_requests[client_fd]);
-			std::cout << req;
+			//std::cout << req;
 			//send response
 			Response resp(req, this);
 			std::string res = resp.process();

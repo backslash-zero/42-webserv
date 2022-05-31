@@ -59,6 +59,10 @@ void	Response::methodGet(void) {
 
 		cgi.convertToC(this);
 		resp = cgi.exec_child(_currentLoc.fastcgi_pass, _req.getBody());
+		if (resp.empty()) {
+			setError(500);
+			return ;
+		}
 		if (resp.find("No input file specified.") != std::string::npos) {
 			setError(404);
 			return ;
@@ -101,7 +105,10 @@ void	Response::methodPost(void) {
 
 		cgi.convertToC(this);
 		resp = cgi.exec_child(_currentLoc.fastcgi_pass, _req.getBody());
-		std::cout << resp << std::endl;
+		if (resp.empty()) {
+			setError(500);
+			return ;
+		}
 		if (resp.find("No input file specified.") != std::string::npos) {
 			setError(404);
 			return ;

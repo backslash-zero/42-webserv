@@ -3,7 +3,7 @@
 Request::Request(const std::string& content):_method(""), _httpVersion(""), _ret(200), _body(""), _path("")
 {
 	setHeader();
-	parse(content);
+	parse((std::string &)content);
 	isValidRequest();
 }
 
@@ -50,9 +50,29 @@ void		Request::parseHeading(const std::string& str){
 
 }
 
-void	Request::parse(const std::string& content){
+std::string	chunk(std::string &content){
+	std::string	head = content.substr(0, content.find("\r\n\r\n"));
+	std::string	chunks = content.substr(content.find("\r\n\r\n") + 4, content.size() - 1);
+	std::string	body = "";
+	size_t		i = 0;
+
+	while (i < chunks.size())
+	{
+		i = chunks.find("\r\n", i) + 2;
+
+		body += chunks.substr(i, chunks.find("\r\n", i));
+		i = chunks.find("\r\n", i) + 2;
+	}
+
+	content = head + "\r\n\r\n" + body + "\r\n\r\n";
+	return content;
+}
+
+void	Request::parse(std::string& content){
 	size_t		lineIdx(0);
 	std::string line;
+	if (content.find("Transfer-Encoding: chunked") != std::string::npos && content.find("Transfer-Encoding: chunked") < content.find("\r\n\r\n"))
+		content = chunk(content);
 	parseHeading(getLine(content, lineIdx)); //parse first line (method, path, httpversion)
 	while ((line = getLine(content, lineIdx)) != "\r" && _ret != 400 && line != ""){ //iterate on request
 		size_t del = line.find(":"); //find delimiter ":"

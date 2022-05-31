@@ -183,12 +183,10 @@ s_server_config Cluster::_setupServer(std::vector<std::string> &serv, std::vecto
 		}
 		if (it->compare("server_name") == 0)
 		{
-			while (it != ite && it->compare(";") != 0)
-			{
-				it++;
-				if (it != ite && it->compare(";") != 0)
-					sv.server_name.push_back(*it);
-			}
+			it++;
+			if (it == ite || it->compare(";") == 0)
+				throw std::logic_error("argument not find");
+			sv.server_name = *it;
 		}
 		if (it->compare("uploads") == 0)
 		{
@@ -316,8 +314,7 @@ void Cluster::printConfig(void)
 		}
 		if (!it->server_name.empty())
 		{
-			for (std::list<std::string>::iterator i = it->server_name.begin(); i != it->server_name.end(); i++)
-				std::cout << "server_name : " << *i << std::endl;
+			std::cout << "server_name : " << it->server_name << std::endl;
 		}
 		if (!it->error_page.empty())
 		{
@@ -517,7 +514,6 @@ bool Cluster::launch()
 							FD_CLR(it->first, &rfds);
 							FD_CLR(it->first, &(this->_msfd));
 							_clients.erase(it->first);
-							it = _clients.begin();
 						}
 						break;
 					}
@@ -566,6 +562,7 @@ Cluster::t_conf Cluster::_getListen()
 	*/
 
 	t_conf res;
+	std::map<int, std::string> tmp_server;
 	std::vector<s_server_config>::iterator it = _serverConf.begin();
 	std::vector<s_server_config>::iterator ite = _serverConf.end();
 	for (; it != ite; it++)
@@ -577,9 +574,10 @@ Cluster::t_conf Cluster::_getListen()
 			port = atoi(tmp.substr(ret + 1, tmp.length() - ret).c_str());
 		else
 			port = atoi(tmp.c_str());
-		if (!res[port].empty())
+		if (!tmp_server[port].empty() && it->server_name == tmp_server[port])
 			throw std::logic_error("PORT already used by a server");
 		res[port].push_back(*it);
+		tmp_server[port] = it->server_name;
 		DIR *dir = opendir(it->root.c_str());
 		if (dir == NULL)
 			throw std::logic_error("ROOT path doesn't exist");
