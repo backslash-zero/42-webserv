@@ -1,7 +1,6 @@
 # Commons
 .DS_Store
 *.txt
-./obj/
-
+obj
 # Executable
 webserv
