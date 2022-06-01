@@ -36,6 +36,7 @@ void	cgi::setupEnv(Response *resp) {
 		_env.push_back("CONTENT_LENGTH=" +  to_string(resp->_req.getBody().size()));
 		_env.push_back("CONTENT_TYPE=" + resp->_req._headers["Content-Type"]);
 	}
+	std::cout << resp->_req.getBody().size() << std::endl;
 	/*_env.push_back("REMOTE_HOST=");
 	_env.push_back("REMOTE_ADDR=");
 	_env.push_back("AUTH_TYPE=");

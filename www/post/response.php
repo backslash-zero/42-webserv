@@ -15,5 +15,4 @@
     echo "Hello " . $name;
 
     ?>
-  </p>
 </body>

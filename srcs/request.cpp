@@ -52,19 +52,18 @@ void		Request::parseHeading(const std::string& str){
 
 std::string	chunk(std::string &content){
 	std::string	head = content.substr(0, content.find("\r\n\r\n"));
-	std::string	chunks = content.substr(content.find("\r\n\r\n") + 4, content.size() - 1);
+	std::string	chunks = content.substr(content.find("\r\n\r\n") + 4, content.find("0\r\n\r\n") - (content.find("\r\n\r\n") + 4));
 	std::string	body = "";
 	size_t		i = 0;
-
+	std::cout << content.find("\r\n\r\n") + 4 << content.find("0\r\n\r\n") - (content.find("\r\n\r\n") + 4) <<std::endl;
 	while (i < chunks.size())
 	{
-		i = chunks.find("\r\n", i) + 2;
-
-		body += chunks.substr(i, chunks.find("\r\n", i));
-		i = chunks.find("\r\n", i) + 2;
+		i = chunks.find("\r\n", i);
+		body += chunks.substr(i + 2, chunks.find("\r\n", i + 2));
+		i = chunks.find("\r\n", i + 2);
 	}
 
-	content = head + "\r\n\r\n" + body + "\r\n\r\n";
+	content = head + "\r\n\r\n" + body;
 	return content;
 }
 
@@ -89,6 +88,7 @@ void	Request::parse(std::string& content){
 	}
 	if (lineIdx != std::string::npos) //get body part
 		_body = content.substr(lineIdx, std::string::npos);
+	std::cout << _body << std::endl;
 }
 
 void	Request::setHeader()
