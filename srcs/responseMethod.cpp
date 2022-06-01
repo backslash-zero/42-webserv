@@ -28,6 +28,7 @@ int		Response::autoIndex(std::string path){
 			_body <<"<p><a href=\"http://" << _currentConf.listen << _req.getPath() << (*_req.getPath().rbegin() == '/' ? "" : "/") << dirEntry->d_name << "\">" << dirEntry->d_name << "</a></p>" << std::endl;
 	}
 	_body << "\n<hr><center><h3>WebServer</h3></center>\n</body>\n</html>";
+	closedir(dir);
 	return 1;
 }
 

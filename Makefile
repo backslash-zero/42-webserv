@@ -4,7 +4,7 @@ HEADER = ./incs/
 
 COMPILER = c++
 
-FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -std=c++98
 
 SRC_PATH = srcs/
 
