@@ -91,7 +91,6 @@ void		Response::setupConf(){
 			break;
 		}
 	}
-	std::cout << _currentConf.autoindex << std::endl;
 	if (it == _conf.end())
 		_currentConf = *_conf.begin();
 
@@ -208,7 +207,7 @@ void			Response::setLocation(){ // find best match for location
 							(_currentLoc.index.size() > 0 ? _currentLoc.index.front() : _currentConf.index.front());
 		}
 	}
-	std::cout << GREEN << "\nCoresponding location: " <<ret.second.path  << WHITE<< std::endl;
+	//std::cout << GREEN << "\nCoresponding location: " <<ret.second.path  << WHITE<< std::endl;
 }
 
 void		Response::isValidRequest(){

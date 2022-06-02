@@ -450,7 +450,7 @@ bool Cluster::launch()
 	signal(SIGINT, sig_close);
 	struct timeval tv; // timevalue is only used for select's last parameter: timeout value.
 	int recVal = 0;
-	tv.tv_sec = 1;
+	tv.tv_sec = 10;
 	tv.tv_usec = 0;
 	while (true)
 	{

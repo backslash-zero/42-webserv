@@ -55,7 +55,6 @@ std::string	chunk(std::string &content){
 	std::string	chunks = content.substr(content.find("\r\n\r\n") + 4, content.find("0\r\n\r\n") - (content.find("\r\n\r\n") + 4));
 	std::string	body = "";
 	size_t		i = 0;
-	std::cout << content.find("\r\n\r\n") + 4 << content.find("0\r\n\r\n") - (content.find("\r\n\r\n") + 4) <<std::endl;
 	while (i < chunks.size())
 	{
 		i = chunks.find("\r\n", i);
@@ -88,7 +87,6 @@ void	Request::parse(std::string& content){
 	}
 	if (lineIdx != std::string::npos) //get body part
 		_body = content.substr(lineIdx, std::string::npos);
-	std::cout << _body << std::endl;
 }
 
 void	Request::setHeader()

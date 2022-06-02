@@ -14,7 +14,6 @@ cgi::cgi() {
 void	cgi::setupEnv(Response *resp) {
 	(void)resp;
 	std::string truncPath = resp->_currentPath.substr(resp->_currentRoot.size());
-	std::cout << "CGI" << truncPath << std::endl;
 	_env.clear();
 	_env.push_back("SERVER_NAME=webserv");
 	_env.push_back("SERVER_SOFTWARE=nginx/1.21.5");
@@ -36,7 +35,6 @@ void	cgi::setupEnv(Response *resp) {
 		_env.push_back("CONTENT_LENGTH=" +  to_string(resp->_req.getBody().size()));
 		_env.push_back("CONTENT_TYPE=" + resp->_req._headers["Content-Type"]);
 	}
-	std::cout << resp->_req.getBody().size() << std::endl;
 	/*_env.push_back("REMOTE_HOST=");
 	_env.push_back("REMOTE_ADDR=");
 	_env.push_back("AUTH_TYPE=");

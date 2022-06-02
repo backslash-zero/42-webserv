@@ -78,18 +78,15 @@ bool Server::listenClient(int client_fd, std::map<int, std::pair<std::string, in
 	if (ret <= 0)
 		return ret;
 	_requests[client_fd] += buffer; // add content to client's request
-	// std::cout << std::endl << GREEN << "Client on fd " << client_fd << " send \n[" << _requests[client_fd] << "]" << WHITE << std::endl;
 	if ((len = _requests[client_fd].find("\r\n\r\n")) != std::string::npos)// if end of request
 	{
 		if (_requests[client_fd].find("Content-Length: ") != std::string::npos)
 			contentLen = std::atoi(_requests[client_fd].substr(_requests[client_fd].find("Content-Length: ") + 16, 10).c_str());
 		if (_requests[client_fd].find("Transfer-Encoding: chunked") != std::string::npos && checkEnd(_requests[client_fd], "0\r\n\r\n") == 1)
 			return 1;
-		std::cout << contentLen << "|" << (_requests[client_fd].size() ) << "|"<< (len + contentLen) <<std::endl;
 		if (_requests[client_fd].size() >= len + contentLen){
 			// process it
 			Request req(_requests[client_fd]);
-			//std::cout << req;
 			//send response
 			Response resp(req, this);
 			std::string res = resp.process();
