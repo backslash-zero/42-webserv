@@ -56,7 +56,6 @@
             
             <form action="/post/response.php" method="post">
                 <h1>Connexion</h1>
-                
                 <label><b>Nom d'utilisateur</b></label>
                 <input type="text" placeholder="Entrer le nom d'utilisateur" name="username" required>
                 <label><b>Mot de passe</b></label>

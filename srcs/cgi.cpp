@@ -28,27 +28,16 @@ void	cgi::setupEnv(Response *resp) {
 	_env.push_back("REQUEST_URI=" + truncPath);
 	_env.push_back("SCRIPT_NAME=" + resp->_currentLoc.fastcgi_pass);
 	_env.push_back("REDIRECT_STATUS=200");
-
 	_env.push_back("PATH_TRANSLATED=" + truncPath);
+
+	std::string tmp_dir = getenv("PWD") + (std::string)"/www/uploads";
+	_env.push_back("TMP_DIR=" + tmp_dir);
 	_env.push_back("QUERY_STRING=" + truncPath);
 	if (resp->_req.getBody().size() > 0) {
 		_env.push_back("CONTENT_LENGTH=" +  to_string(resp->_req.getBody().size()));
+		_env.push_back("BODY=" + resp->_req.getBody());
 		_env.push_back("CONTENT_TYPE=" + resp->_req._headers["Content-Type"]);
 	}
-	/*_env.push_back("REMOTE_HOST=");
-	_env.push_back("REMOTE_ADDR=");
-	_env.push_back("AUTH_TYPE=");
-	_env.push_back("REMOTE_USER=");
-	_env.push_back("REMOTE_IDENT=");
-	_env.push_back("HTTP_ACCEPT=");
-	_env.push_back("HTTP_ACCEPT_LANGUAGE=");
-	_env.push_back("HTTP_USER_AGENT=");
-	_env.push_back("HTTP_COOKIE=");
-	_env.push_back("HTTP_REFERER=");
-	// security of php-cgi redirect status 200
-	// tmp dir where the files will be uploaded
-	_env.push_back("TMP_DIR=");
-	_envTab[NB_CGI_VAR] = 0;*/
 }
 
 void	cgi::convertToC(Response *resp) {
@@ -75,7 +64,7 @@ std::string	cgi::exec_child(std::string exec, std::string body) {
 	long	fdIn = fileno(fileIn);
 	long	fdOut = fileno(fileOut);
 	int		ret = 1;
-
+	(void)body;
 	int ret_w = write(fdIn, body.c_str(), body.size());
 	if (ret_w == -1) {
 		std::cerr << "error: write" << std::endl;

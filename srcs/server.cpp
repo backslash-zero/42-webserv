@@ -77,7 +77,7 @@ bool Server::listenClient(int client_fd, std::map<int, std::pair<std::string, in
 	ret = ::recv(client_fd, buffer, 8192 - 1, 0); // listen to client
 	if (ret <= 0)
 		return ret;
-	_requests[client_fd] += buffer; // add content to client's request
+	_requests[client_fd] +=buffer; // add content to client's request
 	if ((len = _requests[client_fd].find("\r\n\r\n")) != std::string::npos)// if end of request
 	{
 		if (_requests[client_fd].find("Content-Length: ") != std::string::npos)

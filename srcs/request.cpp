@@ -86,7 +86,7 @@ void	Request::parse(std::string& content){
 			_headers[key] = value;
 	}
 	if (lineIdx != std::string::npos) //get body part
-		_body = content.substr(lineIdx, std::string::npos);
+		_body.assign(content.substr(lineIdx, std::string::npos));
 }
 
 void	Request::setHeader()

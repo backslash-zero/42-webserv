@@ -462,6 +462,8 @@ void	sig_close(int sig){
 
 bool Cluster::launch()
 {
+	bool readwriteCheck;
+
 	signal(SIGINT, sig_close);
 	struct timeval tv; // timevalue is only used for select's last parameter: timeout value.
 	int recVal = 0;
@@ -497,11 +499,14 @@ bool Cluster::launch()
 			}
 			default: // change happened
 			{
+
+				readwriteCheck = false;
 				// select() changes the fd_set : it now contains ONLY the ones ready for reading.
 				// we then need to check each fd in the set to see if it's a new connection.
 				for (std::map<int, std::pair<std::string, int> >::iterator it = _response.begin(); it != _response.end(); it++)
 				{ // iterate on response ready to send
-					if (FD_ISSET(it->first, &wfds)){
+					if (FD_ISSET(it->first, &wfds) && readwriteCheck == false){
+						readwriteCheck = true;
 						int ret_s = send(it->first, it->second.first.c_str(), it->second.first.size(), 0); //exemple
 						if (it->second.second == 0 || ret_s == -1 || !ret_s) //Connection close cause of error
 						{
@@ -518,8 +523,9 @@ bool Cluster::launch()
 				}
 				for (std::map<int, Server *>::iterator it = _clients.begin(); it != _clients.end(); it++)
 				{ // iterate on connected clients
-					if (FD_ISSET(it->first, &rfds))
+					if (FD_ISSET(it->first, &rfds) && readwriteCheck == false)
 					{ // search the client who send us smth
+						readwriteCheck = true;
 						int client_fd = it->first;
 						int ret = it->second->listenClient(client_fd, _response); // listen to it
 						if (ret <= 0)
@@ -535,8 +541,9 @@ bool Cluster::launch()
 				}
 				for (std::map<int, Server *>::iterator it = _servers.begin(); it != _servers.end(); it++)
 				{ // iterate on server
-					if (FD_ISSET(it->second->getSocket(), &rfds))
+					if (FD_ISSET(it->second->getSocket(), &rfds) && readwriteCheck == false)
 					{										   // search for the server who send us smth
+						readwriteCheck = true;
 						int connection = it->second->accept(); // accept incomming connection
 						if (connection != -1)
 						{

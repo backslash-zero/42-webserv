@@ -100,7 +100,6 @@ void		Response::setupConf(){
 }
 
 std::string		Response::setRedirect(){
-	std::cout << _currentLoc.redirect.empty() <<std::endl;
 	if (!_currentLoc.redirect.empty()) {
 		_ret = 301;
 		_currentPath = _currentLoc.redirect;
@@ -210,7 +209,6 @@ void			Response::setLocation(){ // find best match for location
 	}
 	_currentRoot = _currentLoc.root.size() ? _currentLoc.root : _currentConf.root;
 	_currentPath = _currentRoot + _req.getPath();
-	std::cout << _currentLoc.redirect <<std::endl;
 	//reinterpret the path if an index.html is specified and there is no autoindex
 	if (_currentLoc.path == _req.getPath()) {
 		if ((_currentConf.autoindex != "on" && _currentLoc.autoindex != "on" ) || _currentLoc.autoindex == "off"){
