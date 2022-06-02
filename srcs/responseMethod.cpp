@@ -74,6 +74,7 @@ void	Response::methodGet(void) {
 		setupHeader();
 		return ;
 	}
+	std::cout << _currentPath <<std::endl;
 	if (readFile(_currentPath)) {
 		setContentType(_currentPath);
 		setupHeader();

@@ -9,6 +9,7 @@ struct s_location {
 	std::string							autoindex;
 	std::vector<std::string>			methods;
 	std::string							fastcgi_pass;
+	std::string 						redirect;
 	// std::map<std::string, std::string>	fastcgi_param;
 	std::vector<s_location>				location;
 };

@@ -32,6 +32,13 @@ static s_location _setupLocationBis(const std::vector<std::string> &loc)
 				throw std::logic_error("argument not find");
 			lc.root = *it;
 		}
+		if (it->compare("redirect") == 0)
+        {
+            it++;
+            if (it == ite || it->compare(";") == 0)
+                throw std::logic_error("argument not find");
+            lc.redirect = *it;
+        }
 		if (it->compare("index") == 0)
 		{
 			while (it != ite && it->compare(";") != 0)
@@ -116,6 +123,13 @@ std::vector<s_location> Cluster::_setupLocation(const std::vector<std::string> &
 				throw std::logic_error("argument not find");
 			lc.root = *it;
 		}
+		if (it->compare("redirect") == 0)
+        {
+            it++;
+            if (it == ite || it->compare(";") == 0)
+                throw std::logic_error("argument not find");
+            lc.redirect = *it;
+        }
 		if (it->compare("index") == 0)
 		{
 			while (it != ite && it->compare(";") != 0)
@@ -159,6 +173,7 @@ std::vector<s_location> Cluster::_setupLocation(const std::vector<std::string> &
 			lc.fastcgi_pass.clear();
 			lc.location.clear();
 			lc.methods.clear();
+			lc.redirect.clear();
 			first_loc = false;
 		}
 		it++;

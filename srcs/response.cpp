@@ -58,6 +58,7 @@ void		Response::setupHeader(){ // setup header map, with corresponding function
 	_headerTemplate["Connection"] = setConnection();
 	_headerTemplate["Date"] = setDate();
 	_headerTemplate["Content-Length"] = setContentLength();
+	_headerTemplate["Location"] = setRedirect();
 }
 
 void		Response::setupError(){ // setup error code with corresponding message
@@ -69,6 +70,7 @@ void		Response::setupError(){ // setup error code with corresponding message
 	_errorTemplate[405] = "Method Not Allowed";
 	_errorTemplate[413] = "Request Entity Too Large";
 	_errorTemplate[500] = "Internal Server Error";
+	_errorTemplate[301] = "Moved Permanently";
 }
 
 Response::~Response(){}
@@ -95,6 +97,15 @@ void		Response::setupConf(){
 		_currentConf = *_conf.begin();
 
 	setLocation();
+}
+
+std::string		Response::setRedirect(){
+	std::cout << _currentLoc.redirect.empty() <<std::endl;
+	if (!_currentLoc.redirect.empty()) {
+		_ret = 301;
+		_currentPath = _currentLoc.redirect;
+	}
+	return _currentPath;
 }
 
 std::string		Response::setDate(){
@@ -199,6 +210,7 @@ void			Response::setLocation(){ // find best match for location
 	}
 	_currentRoot = _currentLoc.root.size() ? _currentLoc.root : _currentConf.root;
 	_currentPath = _currentRoot + _req.getPath();
+	std::cout << _currentLoc.redirect <<std::endl;
 	//reinterpret the path if an index.html is specified and there is no autoindex
 	if (_currentLoc.path == _req.getPath()) {
 		if ((_currentConf.autoindex != "on" && _currentLoc.autoindex != "on" ) || _currentLoc.autoindex == "off"){

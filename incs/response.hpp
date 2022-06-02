@@ -51,6 +51,7 @@ class Response{
 	std::string		setDate(void);
 	std::string		setContentLength(void);
 	std::string		setContentType(std::string path);
+	std::string		setRedirect(void);
 
 	std::string		getHtmlFile(const std::string& path); // read file and return string
 	void			writeInFile(std::string body);
